@@ -1,0 +1,112 @@
+"use client"
+
+import { ShoppingCart, Menu, Zap, User } from "lucide-react"
+import { Button } from "@/components/ui/button"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import { useSession, signOut } from "next-auth/react"
+import Link from "next/link"
+
+export function Header() {
+  const { data: session } = useSession()
+  return (
+    <header className="sticky top-0 z-50 w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      <div className="container mx-auto flex h-16 items-center justify-between px-4">
+        <div className="flex items-center gap-2">
+          <Zap className="h-7 w-7 fill-primary text-primary" />
+          <span className="text-xl font-bold text-foreground">Daily Deals SA</span>
+        </div>
+
+        <nav className="hidden md:flex items-center gap-6">
+          <a href="#deals" className="text-sm font-medium text-foreground hover:text-primary transition-colors">
+            Today's Deals
+          </a>
+          <a href="#electronics" className="text-sm font-medium text-foreground hover:text-primary transition-colors">
+            Electronics
+          </a>
+          <a href="#appliances" className="text-sm font-medium text-foreground hover:text-primary transition-colors">
+            Appliances
+          </a>
+          <a href="#vapes" className="text-sm font-medium text-foreground hover:text-primary transition-colors">
+            Vapes
+          </a>
+          <a href="#hardware" className="text-sm font-medium text-foreground hover:text-primary transition-colors">
+            Hardware
+          </a>
+        </nav>
+
+        <div className="flex items-center gap-3">
+          <Button variant="ghost" size="icon" className="relative">
+            <ShoppingCart className="h-5 w-5" />
+            <span className="absolute -top-1 -right-1 h-5 w-5 rounded-full bg-primary text-primary-foreground text-xs flex items-center justify-center font-bold">
+              3
+            </span>
+          </Button>
+          
+          {session ? (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" className="relative h-8 w-8 rounded-full">
+                  <Avatar className="h-8 w-8">
+                    <AvatarImage src={session.user?.image || ""} alt={session.user?.name || ""} />
+                    <AvatarFallback>
+                      {session.user?.name?.charAt(0) || "U"}
+                    </AvatarFallback>
+                  </Avatar>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="w-56" align="end" forceMount>
+                <DropdownMenuLabel className="font-normal">
+                  <div className="flex flex-col space-y-1">
+                    <p className="text-sm font-medium leading-none">
+                      {session.user?.name}
+                    </p>
+                    <p className="text-xs leading-none text-muted-foreground">
+                      {session.user?.email}
+                    </p>
+                  </div>
+                </DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem asChild>
+                  <Link href="/profile">Profile</Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link href="/orders">Orders</Link>
+                </DropdownMenuItem>
+                {session.user?.role === "ADMIN" && (
+                  <DropdownMenuItem asChild>
+                    <Link href="/admin">Admin Panel</Link>
+                  </DropdownMenuItem>
+                )}
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={() => signOut()}>
+                  Log out
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          ) : (
+            <div className="flex items-center gap-2">
+              <Button variant="ghost" asChild>
+                <Link href="/auth/signin">Sign In</Link>
+              </Button>
+              <Button asChild>
+                <Link href="/auth/signup">Sign Up</Link>
+              </Button>
+            </div>
+          )}
+          
+          <Button variant="ghost" size="icon" className="md:hidden">
+            <Menu className="h-5 w-5" />
+          </Button>
+        </div>
+      </div>
+    </header>
+  )
+}
