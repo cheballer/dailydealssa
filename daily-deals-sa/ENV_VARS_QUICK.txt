@@ -1,0 +1,97 @@
+================================================================================
+🔧 VERCEL ENVIRONMENT VARIABLES - QUICK GUIDE
+================================================================================
+
+✅ FIXED: vercel.json has been updated to remove placeholder references.
+
+Now add environment variables directly in Vercel dashboard:
+
+================================================================================
+📝 STEP-BY-STEP INSTRUCTIONS
+================================================================================
+
+1. Go to: https://vercel.com/dashboard
+2. Click your project → Settings → Environment Variables
+3. Click "Add New" for each variable below:
+
+================================================================================
+📋 COPY & PASTE THESE VARIABLES
+================================================================================
+
+Variable 1: DATABASE_URL
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+postgres://dcc414ef8ed9c7a450ddc6e6ce4dc5e32e3c28aa63bcf6207f3ed3bbb1496327:sk_QtPkmGrIV-hcQnhoms9fh@db.prisma.io:5432/postgres?sslmode=require
+
+Variable 2: NEXTAUTH_URL
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+https://YOUR-APP-NAME.vercel.app
+⚠️  REPLACE YOUR-APP-NAME WITH YOUR ACTUAL VERCEL APP NAME!
+
+Variable 3: NEXTAUTH_SECRET
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Generate with: openssl rand -base64 32
+Then copy the output and paste it here
+
+Variable 4: PAYMENTS_MODE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+mock
+
+Variable 5: IKHOKHA_APP_ID
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+IK7WXELYCOCXYDJ1LCK9ND6N7WVTXWJD
+
+Variable 6: IKHOKHA_APP_KEY
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+jG2HsRS43fyeOa3W5RfZbm3cBZRkLHUG
+
+================================================================================
+⚙️ IMPORTANT SETTINGS
+================================================================================
+
+For EACH variable:
+✅ Select: Production
+✅ Select: Preview
+✅ Select: Development
+
+Then click "Save"
+
+================================================================================
+🔄 AFTER ADDING ALL VARIABLES
+================================================================================
+
+1. Go to "Deployments" tab
+2. Click "..." on latest deployment
+3. Click "Redeploy"
+4. Wait 2-3 minutes
+
+================================================================================
+✅ VERIFY
+================================================================================
+
+After redeployment:
+- Go to Settings → Environment Variables
+- You should see all 6 variables
+- Each should have ✓ for Production, Preview, Development
+
+================================================================================
+🚀 NEXT: SETUP DATABASE
+================================================================================
+
+After successful redeployment, run:
+
+npm install -g vercel
+vercel login
+vercel link
+npx prisma migrate deploy
+npm run seed:products
+npm run seed:drops
+npm run create-admin
+
+================================================================================
+🎉 DONE!
+================================================================================
+
+Visit: https://YOUR-APP-NAME.vercel.app
+Login: admin@dailydeals-sa.com / admin123
+
+================================================================================

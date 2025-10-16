@@ -3,23 +3,5 @@
   "devCommand": "npm run dev",
   "installCommand": "npm install --legacy-peer-deps",
   "framework": "nextjs",
-  "regions": ["iad1"],
-  "env": {
-    "DATABASE_URL": "@database_url",
-    "NEXTAUTH_URL": "@nextauth_url",
-    "NEXTAUTH_SECRET": "@nextauth_secret",
-    "PAYMENTS_MODE": "@payments_mode",
-    "IKHOKHA_APP_ID": "@ikhokha_app_id",
-    "IKHOKHA_APP_KEY": "@ikhokha_app_key",
-    "IKHOKHA_API_URL": "@ikhokha_api_url",
-    "GOOGLE_CLIENT_ID": "@google_client_id",
-    "GOOGLE_CLIENT_SECRET": "@google_client_secret",
-    "EMAIL_FROM": "@email_from",
-    "SMTP_HOST": "@smtp_host",
-    "SMTP_PORT": "@smtp_port",
-    "SMTP_USER": "@smtp_user",
-    "SMTP_PASSWORD": "@smtp_password",
-    "POSTNET_API_KEY": "@postnet_api_key",
-    "POSTNET_API_URL": "@postnet_api_url"
-  }
+  "regions": ["iad1"]
 }
