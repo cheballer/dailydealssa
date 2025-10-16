@@ -1,4 +1,4 @@
-import { Zap } from "lucide-react"
+import Link from "next/link"
 
 export function Footer() {
   return (
@@ -6,9 +6,14 @@ export function Footer() {
       <div className="container mx-auto px-4 py-12">
         <div className="grid gap-8 md:grid-cols-4">
           <div>
-            <div className="mb-4 flex items-center gap-2">
-              <Zap className="h-6 w-6 fill-secondary-foreground text-secondary-foreground" />
-              <span className="text-lg font-bold">Daily Deals SA</span>
+            <div className="mb-4">
+              <Link href="/">
+                <img 
+                  src="/logo.png" 
+                  alt="Daily Deals SA" 
+                  className="h-12 w-auto"
+                />
+              </Link>
             </div>
             <p className="text-sm text-secondary-foreground/80 leading-relaxed">
               South Africa's premier destination for unbeatable daily deals on electronics, appliances, and more.
