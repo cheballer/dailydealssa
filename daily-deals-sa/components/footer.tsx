@@ -19,28 +19,28 @@ export function Footer() {
             <h4 className="mb-4 font-semibold">Shop</h4>
             <ul className="space-y-2 text-sm text-secondary-foreground/80">
               <li>
-                <a href="#" className="hover:text-secondary-foreground transition-colors">
+                <a href="/deals/today" className="hover:text-secondary-foreground transition-colors">
                   Today's Deals
                 </a>
               </li>
               <li>
-                <a href="#" className="hover:text-secondary-foreground transition-colors">
+                <a href="/c/electronics" className="hover:text-secondary-foreground transition-colors">
                   Electronics
                 </a>
               </li>
               <li>
-                <a href="#" className="hover:text-secondary-foreground transition-colors">
+                <a href="/c/appliances" className="hover:text-secondary-foreground transition-colors">
                   Appliances
                 </a>
               </li>
               <li>
-                <a href="#" className="hover:text-secondary-foreground transition-colors">
-                  Vapes
+                <a href="/c/hardware" className="hover:text-secondary-foreground transition-colors">
+                  Hardware
                 </a>
               </li>
               <li>
-                <a href="#" className="hover:text-secondary-foreground transition-colors">
-                  Hardware
+                <a href="/categories" className="hover:text-secondary-foreground transition-colors">
+                  All Categories
                 </a>
               </li>
             </ul>

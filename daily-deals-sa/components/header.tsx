@@ -16,30 +16,33 @@ import Link from "next/link"
 
 export function Header() {
   const { data: session } = useSession()
+  // @ts-ignore - session user has role field from our extended session
+  const isAdmin = session?.user?.role === "ADMIN"
+  
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container mx-auto flex h-16 items-center justify-between px-4">
-        <div className="flex items-center gap-2">
+        <Link href="/" className="flex items-center gap-2">
           <Zap className="h-7 w-7 fill-primary text-primary" />
           <span className="text-xl font-bold text-foreground">Daily Deals SA</span>
-        </div>
+        </Link>
 
         <nav className="hidden md:flex items-center gap-6">
-          <a href="#deals" className="text-sm font-medium text-foreground hover:text-primary transition-colors">
+          <Link href="/deals/today" className="text-sm font-medium text-foreground hover:text-primary transition-colors">
             Today's Deals
-          </a>
-          <a href="#electronics" className="text-sm font-medium text-foreground hover:text-primary transition-colors">
+          </Link>
+          <Link href="/c/electronics" className="text-sm font-medium text-foreground hover:text-primary transition-colors">
             Electronics
-          </a>
-          <a href="#appliances" className="text-sm font-medium text-foreground hover:text-primary transition-colors">
+          </Link>
+          <Link href="/c/appliances" className="text-sm font-medium text-foreground hover:text-primary transition-colors">
             Appliances
-          </a>
-          <a href="#vapes" className="text-sm font-medium text-foreground hover:text-primary transition-colors">
-            Vapes
-          </a>
-          <a href="#hardware" className="text-sm font-medium text-foreground hover:text-primary transition-colors">
+          </Link>
+          <Link href="/c/hardware" className="text-sm font-medium text-foreground hover:text-primary transition-colors">
             Hardware
-          </a>
+          </Link>
+          <Link href="/categories" className="text-sm font-medium text-foreground hover:text-primary transition-colors">
+            Browse Categories
+          </Link>
         </nav>
 
         <div className="flex items-center gap-3">
@@ -80,7 +83,7 @@ export function Header() {
                 <DropdownMenuItem asChild>
                   <Link href="/orders">Orders</Link>
                 </DropdownMenuItem>
-                {session.user?.role === "ADMIN" && (
+                {isAdmin && (
                   <DropdownMenuItem asChild>
                     <Link href="/admin">Admin Panel</Link>
                   </DropdownMenuItem>

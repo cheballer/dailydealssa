@@ -1,55 +1,54 @@
-"use client"
+import { requireAdmin } from '@/lib/auth-utils';
+import Link from 'next/link';
+import { Package, ShoppingCart, Zap, LayoutDashboard } from 'lucide-react';
 
-import { useSession } from "next-auth/react"
-import { useRouter } from "next/navigation"
-import { useEffect } from "react"
-import { Button } from "@/components/ui/button"
-import { Sidebar } from "@/components/admin/sidebar"
-import { Header } from "@/components/admin/header"
-
-export default function AdminLayout({
+export default async function AdminLayout({
   children,
 }: {
-  children: React.ReactNode
+  children: React.ReactNode;
 }) {
-  const { data: session, status } = useSession()
-  const router = useRouter()
-
-  useEffect(() => {
-    if (status === "loading") return
-
-    if (!session) {
-      router.push("/auth/signin")
-      return
-    }
-
-    if (session.user?.role !== "ADMIN") {
-      router.push("/")
-      return
-    }
-  }, [session, status, router])
-
-  if (status === "loading") {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-gray-900"></div>
-      </div>
-    )
-  }
-
-  if (!session || session.user?.role !== "ADMIN") {
-    return null
-  }
+  await requireAdmin();
 
   return (
-    <div className="flex h-screen bg-gray-100">
-      <Sidebar />
-      <div className="flex-1 flex flex-col overflow-hidden">
-        <Header />
-        <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-100 p-6">
-          {children}
-        </main>
-      </div>
+    <div className="min-h-screen flex">
+      <aside className="w-64 bg-muted border-r">
+        <div className="p-6">
+          <h2 className="text-lg font-bold">Admin Panel</h2>
+        </div>
+        <nav className="space-y-1 px-3">
+          <Link
+            href="/admin"
+            className="flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-md hover:bg-accent transition-colors"
+          >
+            <LayoutDashboard className="h-4 w-4" />
+            Dashboard
+          </Link>
+          <Link
+            href="/admin/products"
+            className="flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-md hover:bg-accent transition-colors"
+          >
+            <Package className="h-4 w-4" />
+            Products
+          </Link>
+          <Link
+            href="/admin/orders"
+            className="flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-md hover:bg-accent transition-colors"
+          >
+            <ShoppingCart className="h-4 w-4" />
+            Orders
+          </Link>
+          <Link
+            href="/admin/drops"
+            className="flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-md hover:bg-accent transition-colors"
+          >
+            <Zap className="h-4 w-4" />
+            Free Drops
+          </Link>
+        </nav>
+      </aside>
+      <main className="flex-1 p-8">
+        {children}
+      </main>
     </div>
-  )
+  );
 }

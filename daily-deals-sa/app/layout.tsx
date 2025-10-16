@@ -3,13 +3,12 @@ import type { Metadata } from "next"
 import { GeistSans } from "geist/font/sans"
 import { GeistMono } from "geist/font/mono"
 import { Analytics } from "@vercel/analytics/next"
-import { SessionProvider } from "next-auth/react"
-import { Toaster } from "@/components/ui/toaster"
+import { Providers } from "@/components/providers"
 import "./globals.css"
 
 export const metadata: Metadata = {
   title: "Daily Deals SA - South Africa's Hottest Daily Deals",
-  description: "Unbeatable prices on electronics, appliances, vapes, and hardware. New deals every 24 hours!",
+  description: "Unbeatable prices on electronics, appliances, and hardware. New deals every 24 hours + 10 FREE items daily!",
   generator: "v0.app",
 }
 
@@ -21,10 +20,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`font-sans ${GeistSans.variable} ${GeistMono.variable}`}>
-        <SessionProvider>
+        <Providers>
           {children}
-          <Toaster />
-        </SessionProvider>
+        </Providers>
         <Analytics />
       </body>
     </html>
