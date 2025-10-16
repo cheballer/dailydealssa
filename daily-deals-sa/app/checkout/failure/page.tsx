@@ -1,12 +1,13 @@
 "use client"
 
+import { Suspense } from "react"
 import { useSearchParams } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { XCircle, RefreshCw, ArrowLeft, CreditCard } from "lucide-react"
 import Link from "next/link"
 
-export default function CheckoutFailurePage() {
+function CheckoutFailureContent() {
   const searchParams = useSearchParams()
   const error = searchParams.get("error") || "Payment was not completed"
 
@@ -69,5 +70,23 @@ export default function CheckoutFailurePage() {
         </Card>
       </div>
     </div>
+  )
+}
+
+export default function CheckoutFailurePage() {
+  return (
+    <Suspense fallback={
+      <div className="container mx-auto px-4 py-8">
+        <div className="max-w-2xl mx-auto">
+          <Card>
+            <CardHeader>
+              <CardTitle>Loading...</CardTitle>
+            </CardHeader>
+          </Card>
+        </div>
+      </div>
+    }>
+      <CheckoutFailureContent />
+    </Suspense>
   )
 }
