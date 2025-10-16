@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge"
 import { ShoppingCart, Zap } from "lucide-react"
 import { isDropActive } from "@/lib/free-drops"
 import Link from "next/link"
+import { toast } from "sonner"
 
 interface FreeDrop {
   id: string
@@ -35,6 +36,38 @@ export function ProductCard({ product }: ProductCardProps) {
   const isFree = product.freeDrop && isDropActive(product.freeDrop.dropAt, product.freeDrop.claimedAt);
   const displayPrice = isFree ? 0 : (product.price ?? 0);
   const hasDiscount = (product.discount ?? 0) > 0;
+
+  const handleAddToCart = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    // Get existing cart from localStorage
+    const existingCart = localStorage.getItem('cart');
+    const cart = existingCart ? JSON.parse(existingCart) : [];
+    
+    // Check if product already in cart
+    const existingItem = cart.find((item: any) => item.id === product.id);
+    
+    if (existingItem) {
+      // Update quantity
+      existingItem.quantity += 1;
+    } else {
+      // Add new item
+      cart.push({
+        id: product.id,
+        name: product.name,
+        price: displayPrice,
+        image: product.image,
+        quantity: 1
+      });
+    }
+    
+    // Save back to localStorage
+    localStorage.setItem('cart', JSON.stringify(cart));
+    
+    // Show success message
+    toast.success(isFree ? "Free item added to cart!" : "Added to cart!");
+  };
 
   return (
     <Card className="group overflow-hidden transition-all hover:shadow-lg hover:border-primary/30">
@@ -92,7 +125,11 @@ export function ProductCard({ product }: ProductCardProps) {
       </CardContent>
 
       <CardFooter className="p-4 pt-0">
-        <Button className="w-full font-semibold" size="sm">
+        <Button 
+          className="w-full font-semibold" 
+          size="sm"
+          onClick={handleAddToCart}
+        >
           <ShoppingCart className="mr-2 h-4 w-4" />
           {isFree ? "Claim Free" : "Add to Cart"}
         </Button>
