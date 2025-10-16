@@ -134,7 +134,7 @@ export default function CheckoutPage() {
     fetchCartItems()
   }, [session, router])
 
-  const fetchCartItems = async () => {
+  const fetchCartItems = () => {
     try {
       // Get cart items from localStorage
       const cartData = localStorage.getItem('cart')
@@ -142,35 +142,19 @@ export default function CheckoutPage() {
       if (cartData) {
         const items = JSON.parse(cartData)
         
-        // Fetch full product details for each item
-        const itemsWithDetails = await Promise.all(
-          items.map(async (item: any) => {
-            try {
-              const response = await fetch(`/api/products/${item.id}`)
-              if (response.ok) {
-                const product = await response.json()
-                return {
-                  id: item.id,
-                  product: {
-                    id: product.id,
-                    name: product.name,
-                    price: product.price,
-                    image: product.image
-                  },
-                  quantity: item.quantity
-                }
-              }
-              return null
-            } catch (error) {
-              console.error('Error fetching product:', error)
-              return null
-            }
-          })
-        )
+        // Convert localStorage items to cart items format
+        const cartItemsData = items.map((item: any) => ({
+          id: item.id,
+          product: {
+            id: item.id,
+            name: item.name,
+            price: item.price,
+            image: item.image
+          },
+          quantity: item.quantity
+        }))
         
-        // Filter out any null items
-        const validItems = itemsWithDetails.filter((item: any) => item !== null)
-        setCartItems(validItems)
+        setCartItems(cartItemsData)
       } else {
         setCartItems([])
       }
