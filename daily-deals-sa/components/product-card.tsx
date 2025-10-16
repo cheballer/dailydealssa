@@ -41,32 +41,40 @@ export function ProductCard({ product }: ProductCardProps) {
     e.preventDefault();
     e.stopPropagation();
     
-    // Get existing cart from localStorage
-    const existingCart = localStorage.getItem('cart');
-    const cart = existingCart ? JSON.parse(existingCart) : [];
-    
-    // Check if product already in cart
-    const existingItem = cart.find((item: any) => item.id === product.id);
-    
-    if (existingItem) {
-      // Update quantity
-      existingItem.quantity += 1;
-    } else {
-      // Add new item
-      cart.push({
-        id: product.id,
-        name: product.name,
-        price: displayPrice,
-        image: product.image,
-        quantity: 1
-      });
+    try {
+      // Get existing cart from localStorage
+      const existingCart = localStorage.getItem('cart');
+      const cart = existingCart ? JSON.parse(existingCart) : [];
+      
+      // Check if product already in cart
+      const existingItem = cart.find((item: any) => item.id === product.id);
+      
+      if (existingItem) {
+        // Update quantity
+        existingItem.quantity += 1;
+      } else {
+        // Add new item
+        cart.push({
+          id: product.id,
+          name: product.name,
+          price: displayPrice,
+          image: product.image,
+          quantity: 1
+        });
+      }
+      
+      // Save back to localStorage
+      localStorage.setItem('cart', JSON.stringify(cart));
+      
+      // Dispatch custom event to update cart count in header
+      window.dispatchEvent(new Event('cartUpdated'));
+      
+      // Show success message
+      toast.success(isFree ? "Free item added to cart!" : "Added to cart!");
+    } catch (error) {
+      console.error('Error adding to cart:', error);
+      toast.error("Failed to add item to cart");
     }
-    
-    // Save back to localStorage
-    localStorage.setItem('cart', JSON.stringify(cart));
-    
-    // Show success message
-    toast.success(isFree ? "Free item added to cart!" : "Added to cart!");
   };
 
   return (

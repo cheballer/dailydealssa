@@ -13,11 +13,41 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { useSession, signOut } from "next-auth/react"
 import Link from "next/link"
+import { useState, useEffect } from "react"
 
 export function Header() {
   const { data: session } = useSession()
   // @ts-ignore - session user has role field from our extended session
   const isAdmin = session?.user?.role === "ADMIN"
+  const [cartCount, setCartCount] = useState(0)
+
+  useEffect(() => {
+    // Get cart count from localStorage
+    const updateCartCount = () => {
+      const cart = localStorage.getItem('cart')
+      if (cart) {
+        const items = JSON.parse(cart)
+        const total = items.reduce((sum: number, item: any) => sum + (item.quantity || 1), 0)
+        setCartCount(total)
+      } else {
+        setCartCount(0)
+      }
+    }
+
+    // Initial load
+    updateCartCount()
+
+    // Listen for storage changes (when cart is updated)
+    window.addEventListener('storage', updateCartCount)
+    
+    // Custom event for same-tab updates
+    window.addEventListener('cartUpdated', updateCartCount)
+
+    return () => {
+      window.removeEventListener('storage', updateCartCount)
+      window.removeEventListener('cartUpdated', updateCartCount)
+    }
+  }, [])
   
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -49,9 +79,11 @@ export function Header() {
           <Button variant="ghost" size="icon" className="relative" asChild>
             <Link href="/checkout">
               <ShoppingCart className="h-5 w-5" />
-              <span className="absolute -top-1 -right-1 h-5 w-5 rounded-full bg-primary text-primary-foreground text-xs flex items-center justify-center font-bold">
-                3
-              </span>
+              {cartCount > 0 && (
+                <span className="absolute -top-1 -right-1 h-5 w-5 rounded-full bg-primary text-primary-foreground text-xs flex items-center justify-center font-bold">
+                  {cartCount}
+                </span>
+              )}
             </Link>
           </Button>
           
