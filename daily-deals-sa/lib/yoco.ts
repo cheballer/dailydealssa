@@ -16,9 +16,8 @@ interface YocoCheckoutRequest {
     unitPrice: number;
     totalPrice: number;
     pricingDetails?: {
-      unitPrice: number;
+      price: number;
       quantity: number;
-      totalPrice: number;
     };
   }>;
   clientReferenceId?: string;
@@ -92,9 +91,8 @@ export class YocoService {
       unitPrice: number;
       totalPrice: number;
       pricingDetails?: {
-        unitPrice: number;
+        price: number;
         quantity: number;
-        totalPrice: number;
       };
     }>
   ): YocoCheckoutRequest {

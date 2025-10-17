@@ -79,9 +79,8 @@ export async function POST(request: NextRequest) {
         unitPrice: unitPrice,
         totalPrice: totalPrice,
         pricingDetails: {
-          unitPrice: unitPrice,
+          price: unitPrice,
           quantity: quantity,
-          totalPrice: totalPrice,
         }
       };
     })
