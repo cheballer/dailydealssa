@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server"
 import { getServerSession } from "next-auth"
 import { authOptions } from "@/lib/auth"
 import { db } from "@/lib/db"
-import { ikhokhaService } from "@/lib/ikhokha"
+import { yocoService } from "@/lib/yoco"
 
 export async function POST(request: NextRequest) {
   try {
@@ -56,55 +56,64 @@ export async function POST(request: NextRequest) {
 
     console.log("✅ Order created:", order.orderNumber)
 
-    // Create iKhokha payment request
+    // Create Yoco checkout request
     const baseUrl = process.env.NEXTAUTH_URL || "http://localhost:3000"
     const description = `Daily Deals SA - Order #${order.orderNumber}`
     
-    console.log("🔗 Creating iKhokha payment link...")
+    console.log("🔗 Creating Yoco checkout...")
     console.log("Base URL:", baseUrl)
     
-    const paymentRequest = ikhokhaService.createPaymentRequest(
+    // Prepare line items for Yoco
+    const lineItems = items.map((item: any) => ({
+      name: item.product.name,
+      quantity: item.quantity,
+      unitPrice: Math.round(item.product.price * 100), // Convert to cents
+      totalPrice: Math.round(item.product.price * item.quantity * 100), // Convert to cents
+    }))
+
+    const checkoutRequest = yocoService.createCheckoutRequest(
       order.id,
       total,
       description,
-      baseUrl
+      baseUrl,
+      lineItems
     )
 
-    console.log("Payment request:", JSON.stringify(paymentRequest, null, 2))
+    console.log("Checkout request:", JSON.stringify(checkoutRequest, null, 2))
 
-    // Create payment link with iKhokha
-    const paymentResponse = await ikhokhaService.createPaymentLink(paymentRequest)
+    // Create checkout with Yoco
+    const checkoutResponse = await yocoService.createCheckout(checkoutRequest)
 
-    console.log("Payment response:", JSON.stringify(paymentResponse, null, 2))
+    console.log("Checkout response:", JSON.stringify(checkoutResponse, null, 2))
 
-    if (paymentResponse.responseCode === "00" && paymentResponse.paylinkUrl) {
+    if (checkoutResponse.redirectUrl) {
       // Update order with payment details
       await db.order.update({
         where: { id: order.id },
         data: {
-          paymentIntentId: paymentResponse.paylinkID,
+          paymentIntentId: checkoutResponse.id,
         }
       })
 
-      console.log("✅ Payment link created successfully:", paymentResponse.paylinkUrl)
+      console.log("✅ Yoco checkout created successfully:", checkoutResponse.redirectUrl)
 
       return NextResponse.json({
-        paylinkUrl: paymentResponse.paylinkUrl,
+        paylinkUrl: checkoutResponse.redirectUrl,
         orderId: order.id,
-        paylinkId: paymentResponse.paylinkID,
+        checkoutId: checkoutResponse.id,
       })
     } else {
-      // Delete the order if payment creation failed
+      // Delete the order if checkout creation failed
       await db.order.delete({
         where: { id: order.id }
       })
 
-      console.error("❌ Failed to create payment link:", paymentResponse)
+      console.error("❌ Failed to create Yoco checkout:", checkoutResponse)
 
       return NextResponse.json(
         { 
-          error: "Failed to create payment link",
-          details: paymentResponse.message || "Unknown error"
+          error: "Failed to create checkout",
+          details: "Unknown error"
         },
         { status: 400 }
       )
