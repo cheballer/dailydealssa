@@ -20,6 +20,23 @@ export async function POST(request: NextRequest) {
     // Create order in database first
     const orderNumber = `DD-${Date.now()}-${Math.random().toString(36).substr(2, 9).toUpperCase()}`
     
+    // First, create the shipping address
+    const shippingAddress = await db.address.create({
+      data: {
+        userId,
+        type: "SHIPPING",
+        firstName: shippingInfo.firstName,
+        lastName: shippingInfo.lastName,
+        address1: shippingInfo.address,
+        city: shippingInfo.city,
+        province: shippingInfo.province,
+        postalCode: shippingInfo.postalCode,
+        phone: shippingInfo.phone,
+        isDefault: false,
+      }
+    })
+    
+    // Then create the order with the shipping address ID
     const order = await db.order.create({
       data: {
         userId,
@@ -30,6 +47,7 @@ export async function POST(request: NextRequest) {
         tax: items.reduce((sum: number, item: any) => sum + (item.product.price * item.quantity), 0) * 0.15,
         total,
         paymentStatus: "PENDING",
+        shippingAddressId: shippingAddress.id,
         items: {
           create: items.map((item: any) => ({
             productId: item.id, // Use item.id directly since we're passing from localStorage
@@ -37,20 +55,6 @@ export async function POST(request: NextRequest) {
             price: item.product.price,
           })),
         },
-        shippingAddress: {
-          create: {
-            userId,
-            type: "SHIPPING",
-            firstName: shippingInfo.firstName,
-            lastName: shippingInfo.lastName,
-            address1: shippingInfo.address,
-            city: shippingInfo.city,
-            province: shippingInfo.province,
-            postalCode: shippingInfo.postalCode,
-            phone: shippingInfo.phone,
-            isDefault: false,
-          }
-        }
       },
     })
 
