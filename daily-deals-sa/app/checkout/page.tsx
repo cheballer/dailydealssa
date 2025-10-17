@@ -10,7 +10,7 @@ import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Separator } from "@/components/ui/separator"
 import { toast } from "sonner"
-import { ShoppingCart, CreditCard, MapPin, Loader2 } from "lucide-react"
+import { ShoppingCart, CreditCard, MapPin, Loader2, X } from "lucide-react"
 
 interface CartItem {
   id: string
@@ -301,7 +301,28 @@ export default function CheckoutPage() {
                     <h3 className="font-medium">{item.product.name}</h3>
                     <p className="text-sm text-gray-500">Quantity: {item.quantity}</p>
                   </div>
-                  <p className="font-medium">R{(item.product.price * item.quantity).toFixed(2)}</p>
+                  <div className="flex items-center space-x-3">
+                    <p className="font-medium">R{(item.product.price * item.quantity).toFixed(2)}</p>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => {
+                        const updatedCart = cartItems.filter(i => i.id !== item.id);
+                        setCartItems(updatedCart);
+                        localStorage.setItem('cart', JSON.stringify(updatedCart.map(i => ({
+                          id: i.id,
+                          name: i.product.name,
+                          price: i.product.price,
+                          image: i.product.image,
+                          quantity: i.quantity
+                        }))));
+                        window.dispatchEvent(new Event('cartUpdated'));
+                        toast.success('Item removed from cart');
+                      }}
+                    >
+                      <X className="h-4 w-4" />
+                    </Button>
+                  </div>
                 </div>
               ))}
               
