@@ -11,7 +11,7 @@ interface YocoCheckoutRequest {
   totalTaxAmount?: number;
   subtotalAmount?: number;
   lineItems?: Array<{
-    name: string;
+    displayName: string;
     quantity: number;
     unitPrice: number;
     totalPrice: number;
@@ -82,7 +82,7 @@ export class YocoService {
     description: string,
     baseUrl: string,
     lineItems?: Array<{
-      name: string;
+      displayName: string;
       quantity: number;
       unitPrice: number;
       totalPrice: number;

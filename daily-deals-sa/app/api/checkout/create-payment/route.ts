@@ -69,7 +69,7 @@ export async function POST(request: NextRequest) {
     
     // Prepare line items for Yoco
     const lineItems = items.map((item: any) => ({
-      name: item.product.name,
+      displayName: item.product.name,
       quantity: item.quantity,
       unitPrice: Math.round(item.product.price * 100), // Convert to cents
       totalPrice: Math.round(item.product.price * item.quantity * 100), // Convert to cents
