@@ -15,6 +15,11 @@ interface YocoCheckoutRequest {
     quantity: number;
     unitPrice: number;
     totalPrice: number;
+    pricingDetails?: {
+      unitPrice: number;
+      quantity: number;
+      totalPrice: number;
+    };
   }>;
   clientReferenceId?: string;
 }
@@ -86,6 +91,11 @@ export class YocoService {
       quantity: number;
       unitPrice: number;
       totalPrice: number;
+      pricingDetails?: {
+        unitPrice: number;
+        quantity: number;
+        totalPrice: number;
+      };
     }>
   ): YocoCheckoutRequest {
     return {

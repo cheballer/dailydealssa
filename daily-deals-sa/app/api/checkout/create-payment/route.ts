@@ -68,12 +68,23 @@ export async function POST(request: NextRequest) {
     console.log("Base URL:", baseUrl)
     
     // Prepare line items for Yoco
-    const lineItems = items.map((item: any) => ({
-      displayName: item.product.name,
-      quantity: item.quantity,
-      unitPrice: Math.round(item.product.price * 100), // Convert to cents
-      totalPrice: Math.round(item.product.price * item.quantity * 100), // Convert to cents
-    }))
+    const lineItems = items.map((item: any) => {
+      const unitPrice = Math.round(item.product.price * 100);
+      const quantity = item.quantity;
+      const totalPrice = unitPrice * quantity;
+      
+      return {
+        displayName: item.product.name,
+        quantity: quantity,
+        unitPrice: unitPrice,
+        totalPrice: totalPrice,
+        pricingDetails: {
+          unitPrice: unitPrice,
+          quantity: quantity,
+          totalPrice: totalPrice,
+        }
+      };
+    })
 
     const checkoutRequest = yocoService.createCheckoutRequest(
       order.id,
