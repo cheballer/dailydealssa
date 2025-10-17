@@ -52,7 +52,7 @@ function CheckoutForm({ cartItems, total, shippingInfo }: {
       const { paylinkUrl, orderId } = await response.json()
 
       if (paylinkUrl) {
-        // Redirect to iKhokha payment page
+        // Redirect to Yoco payment page
         window.location.href = paylinkUrl
       } else {
         toast.error("Failed to create payment link")
@@ -73,14 +73,14 @@ function CheckoutForm({ cartItems, total, shippingInfo }: {
           Payment Information
         </CardTitle>
         <CardDescription>
-          Secure payment powered by iKhokha
+          Secure payment powered by Yoco
         </CardDescription>
       </CardHeader>
       <CardContent>
         <div className="space-y-4">
           <div className="p-4 border rounded-md bg-gray-50">
             <p className="text-sm text-gray-600 mb-2">
-              You will be redirected to iKhokha's secure payment page to complete your purchase.
+              You will be redirected to Yoco's secure payment page to complete your purchase.
             </p>
             <div className="flex items-center space-x-2 text-sm text-gray-500">
               <div className="w-2 h-2 bg-green-500 rounded-full"></div>
