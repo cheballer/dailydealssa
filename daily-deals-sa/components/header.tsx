@@ -26,9 +26,11 @@ export function Header() {
   const [searchQuery, setSearchQuery] = useState("")
 
   useEffect(() => {
-    // Get cart count from localStorage
+    // Get cart count from localStorage with user-specific key
     const updateCartCount = () => {
-      const cart = localStorage.getItem('cart')
+      const userId = session?.user?.id || 'guest'
+      const cartKey = `cart_${userId}`
+      const cart = localStorage.getItem(cartKey)
       if (cart) {
         const items = JSON.parse(cart)
         const total = items.reduce((sum: number, item: any) => sum + (item.quantity || 1), 0)
@@ -51,7 +53,7 @@ export function Header() {
       window.removeEventListener('storage', updateCartCount)
       window.removeEventListener('cartUpdated', updateCartCount)
     }
-  }, [])
+  }, [session])
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault()

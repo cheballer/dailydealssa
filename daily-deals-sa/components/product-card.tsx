@@ -42,8 +42,13 @@ export function ProductCard({ product }: ProductCardProps) {
     e.stopPropagation();
     
     try {
+      // Get user-specific cart key (this would need to be passed as a prop or from context)
+      // For now, using a simple approach - in production, use a proper cart context
+      const userId = typeof window !== 'undefined' ? localStorage.getItem('currentUserId') || 'guest' : 'guest';
+      const cartKey = `cart_${userId}`;
+      
       // Get existing cart from localStorage
-      const existingCart = localStorage.getItem('cart');
+      const existingCart = localStorage.getItem(cartKey);
       const cart = existingCart ? JSON.parse(existingCart) : [];
       
       // Check if product already in cart
@@ -63,8 +68,8 @@ export function ProductCard({ product }: ProductCardProps) {
         });
       }
       
-      // Save back to localStorage
-      localStorage.setItem('cart', JSON.stringify(cart));
+      // Save back to localStorage with user-specific key
+      localStorage.setItem(cartKey, JSON.stringify(cart));
       
       // Dispatch custom event to update cart count in header
       window.dispatchEvent(new Event('cartUpdated'));

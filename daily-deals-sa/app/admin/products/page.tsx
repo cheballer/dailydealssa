@@ -26,6 +26,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { Switch } from "@/components/ui/switch"
 import { Plus, Edit, Trash2, Eye } from "lucide-react"
 import { toast } from "sonner"
+import { ImageUpload } from "@/components/image-upload"
 
 interface Product {
   id: string
@@ -285,12 +286,10 @@ export default function AdminProducts() {
               </div>
 
               <div>
-                <Label htmlFor="image">Image URL</Label>
-                <Input
-                  id="image"
-                  value={formData.image}
-                  onChange={(e) => setFormData({ ...formData, image: e.target.value })}
-                  required
+                <ImageUpload
+                  onImageUploaded={(url) => setFormData({ ...formData, image: url })}
+                  currentImage={formData.image}
+                  label="Product Image"
                 />
               </div>
 
