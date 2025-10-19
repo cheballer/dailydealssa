@@ -11,7 +11,7 @@ export function Footer() {
                 <img 
                   src="/logo.png" 
                   alt="Daily Deals SA" 
-                  className="h-12 w-auto"
+                  className="h-20 w-auto"
                 />
               </Link>
             </div>
