@@ -67,7 +67,7 @@ export function Header() {
           <img 
             src="/logo.png" 
             alt="Daily Deals SA" 
-            className="h-16 w-auto"
+            className="h-10 w-auto"
           />
         </Link>
 
