@@ -42,6 +42,20 @@ export async function POST(request: NextRequest) {
 
     const data = await request.json()
 
+    // Check if user already has 4 addresses
+    const addressCount = await db.address.count({
+      where: {
+        userId: session.user.id,
+      },
+    })
+
+    if (addressCount >= 4) {
+      return NextResponse.json(
+        { error: "Maximum of 4 addresses allowed per user. Please delete an existing address first." },
+        { status: 400 }
+      )
+    }
+
     // If this is set as default, unset other defaults
     if (data.isDefault) {
       await db.address.updateMany({

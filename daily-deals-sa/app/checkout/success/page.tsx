@@ -39,12 +39,21 @@ function CheckoutSuccessContent() {
     const paylinkId = searchParams.get("paylinkId")
     const externalTransactionId = searchParams.get("externalTransactionId")
 
+    // Clear cart after successful payment
+    if (session?.user?.id) {
+      const userId = session.user.id
+      const cartKey = `cart_${userId}`
+      localStorage.removeItem(cartKey)
+      window.dispatchEvent(new Event('cartUpdated'))
+      console.log('✅ Cart cleared after successful payment')
+    }
+
     if (paylinkId || externalTransactionId) {
       fetchOrderDetails(paylinkId || externalTransactionId)
     } else {
       setLoading(false)
     }
-  }, [searchParams])
+  }, [searchParams, session])
 
   const fetchOrderDetails = async (transactionId: string) => {
     try {

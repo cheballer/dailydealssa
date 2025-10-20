@@ -94,6 +94,13 @@ export default function AddressesPage() {
       } else {
         const error = await response.json()
         toast.error(error.error || "Failed to save address")
+        
+        // If it's a 400 error with address limit message, don't close dialog
+        if (response.status === 400) {
+          // Keep dialog open so user can see the error
+        } else {
+          setDialogOpen(false)
+        }
       }
     } catch (error) {
       console.error("Error saving address:", error)
@@ -198,7 +205,7 @@ export default function AddressesPage() {
           </div>
           <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
             <DialogTrigger asChild>
-              <Button onClick={resetForm}>
+              <Button onClick={resetForm} disabled={addresses.length >= 4}>
                 <Plus className="mr-2 h-4 w-4" />
                 Add Address
               </Button>
@@ -211,6 +218,8 @@ export default function AddressesPage() {
                 <DialogDescription>
                   {editingAddress
                     ? "Update your address details"
+                    : addresses.length >= 4
+                    ? "Maximum of 4 addresses allowed. Delete an existing address to add a new one."
                     : "Add a new shipping address to your account"}
                 </DialogDescription>
               </DialogHeader>
@@ -337,7 +346,7 @@ export default function AddressesPage() {
                 </div>
 
                 <div className="flex gap-3">
-                  <Button type="submit" className="flex-1">
+                  <Button type="submit" className="flex-1" disabled={!editingAddress && addresses.length >= 4}>
                     {editingAddress ? "Update Address" : "Add Address"}
                   </Button>
                   <Button

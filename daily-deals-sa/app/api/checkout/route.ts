@@ -292,6 +292,9 @@ export async function POST(req: NextRequest) {
       });
     }
 
+    // Note: Cart will be cleared on the client side after successful payment
+    // The client should clear localStorage after receiving this response
+
     return NextResponse.json({
       success: true,
       order: {
@@ -301,6 +304,7 @@ export async function POST(req: NextRequest) {
         trackingNumber: order.trackingNumber,
         paymentStatus: order.paymentStatus,
       },
+      clearCart: true, // Flag to indicate cart should be cleared
     });
 
   } catch (error) {
