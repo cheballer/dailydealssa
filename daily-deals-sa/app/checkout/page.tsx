@@ -10,7 +10,8 @@ import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Separator } from "@/components/ui/separator"
 import { toast } from "sonner"
-import { ShoppingCart, CreditCard, MapPin, Loader2, X } from "lucide-react"
+import { ShoppingCart, CreditCard, MapPin, Loader2, X, Plus } from "lucide-react"
+import { AddressAutocomplete } from "@/components/address-autocomplete"
 
 interface CartItem {
   id: string
@@ -116,6 +117,9 @@ export default function CheckoutPage() {
   const router = useRouter()
   const [cartItems, setCartItems] = useState<CartItem[]>([])
   const [loading, setLoading] = useState(true)
+  const [savedAddresses, setSavedAddresses] = useState<any[]>([])
+  const [useSavedAddress, setUseSavedAddress] = useState(false)
+  const [selectedAddressId, setSelectedAddressId] = useState<string | null>(null)
   const [shippingInfo, setShippingInfo] = useState({
     firstName: "",
     lastName: "",
@@ -132,7 +136,47 @@ export default function CheckoutPage() {
       return
     }
     fetchCartItems()
+    fetchSavedAddresses()
   }, [session, router])
+
+  const fetchSavedAddresses = async () => {
+    try {
+      const response = await fetch('/api/user/addresses')
+      if (response.ok) {
+        const data = await response.json()
+        setSavedAddresses(data.addresses || [])
+      }
+    } catch (error) {
+      console.error('Error fetching saved addresses:', error)
+    }
+  }
+
+  const handleAddressSelect = (address: any) => {
+    setShippingInfo({
+      ...shippingInfo,
+      address: address.street,
+      city: address.city,
+      province: address.province,
+      postalCode: address.postalCode,
+    })
+  }
+
+  const handleUseSavedAddress = (addressId: string) => {
+    const address = savedAddresses.find(a => a.id === addressId)
+    if (address) {
+      setShippingInfo({
+        firstName: address.firstName,
+        lastName: address.lastName,
+        address: address.address1,
+        city: address.city,
+        province: address.province,
+        postalCode: address.postalCode,
+        phone: address.phone,
+      })
+      setSelectedAddressId(addressId)
+      setUseSavedAddress(true)
+    }
+  }
 
   const fetchCartItems = () => {
     try {
@@ -257,6 +301,55 @@ export default function CheckoutPage() {
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
+              {/* Saved Addresses */}
+              {savedAddresses.length > 0 && (
+                <div className="space-y-2">
+                  <Label>Saved Addresses</Label>
+                  <div className="space-y-2">
+                    {savedAddresses.map((address) => (
+                      <button
+                        key={address.id}
+                        type="button"
+                        onClick={() => handleUseSavedAddress(address.id)}
+                        className={`w-full text-left p-3 border rounded-md hover:border-primary transition-colors ${
+                          selectedAddressId === address.id ? 'border-primary bg-primary/5' : ''
+                        }`}
+                      >
+                        <div className="flex items-start justify-between">
+                          <div>
+                            <p className="font-medium">
+                              {address.firstName} {address.lastName}
+                            </p>
+                            <p className="text-sm text-gray-600">
+                              {address.address1}, {address.city}, {address.province} {address.postalCode}
+                            </p>
+                          </div>
+                          {address.isDefault && (
+                            <span className="text-xs bg-primary text-primary-foreground px-2 py-1 rounded">
+                              Default
+                            </span>
+                          )}
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    className="w-full"
+                    onClick={() => {
+                      setUseSavedAddress(false)
+                      setSelectedAddressId(null)
+                    }}
+                  >
+                    <Plus className="h-4 w-4 mr-2" />
+                    Use New Address
+                  </Button>
+                  <Separator />
+                </div>
+              )}
+
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <Label htmlFor="firstName">First Name</Label>
@@ -277,15 +370,15 @@ export default function CheckoutPage() {
                   />
                 </div>
               </div>
-              <div>
-                <Label htmlFor="address">Address</Label>
-                <Textarea
-                  id="address"
-                  value={shippingInfo.address}
-                  onChange={(e) => setShippingInfo({ ...shippingInfo, address: e.target.value })}
-                  required
-                />
-              </div>
+              
+              {/* Address Autocomplete */}
+              <AddressAutocomplete
+                onAddressSelect={handleAddressSelect}
+                value={shippingInfo.address}
+                onChange={(value) => setShippingInfo({ ...shippingInfo, address: value })}
+                placeholder="Start typing your address..."
+                label="Delivery Address"
+              />
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <Label htmlFor="city">City</Label>
