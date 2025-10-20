@@ -28,7 +28,13 @@ export function Header() {
   useEffect(() => {
     // Get cart count from localStorage with user-specific key
     const updateCartCount = () => {
-      const userId = session?.user?.id || 'guest'
+      // If not logged in, show 0 cart count
+      if (!session) {
+        setCartCount(0)
+        return
+      }
+
+      const userId = session.user.id
       const cartKey = `cart_${userId}`
       const cart = localStorage.getItem(cartKey)
       if (cart) {

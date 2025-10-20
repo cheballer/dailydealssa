@@ -7,6 +7,8 @@ import { ShoppingCart, Zap } from "lucide-react"
 import { isDropActive } from "@/lib/free-drops"
 import Link from "next/link"
 import { toast } from "sonner"
+import { useSession } from "next-auth/react"
+import { useRouter } from "next/navigation"
 
 interface FreeDrop {
   id: string
@@ -33,6 +35,8 @@ interface ProductCardProps {
 }
 
 export function ProductCard({ product }: ProductCardProps) {
+  const { data: session } = useSession();
+  const router = useRouter();
   const isFree = product.freeDrop && isDropActive(product.freeDrop.dropAt, product.freeDrop.claimedAt);
   const displayPrice = isFree ? 0 : (product.price ?? 0);
   const hasDiscount = (product.discount ?? 0) > 0;
@@ -41,10 +45,16 @@ export function ProductCard({ product }: ProductCardProps) {
     e.preventDefault();
     e.stopPropagation();
     
+    // Check if user is logged in
+    if (!session) {
+      toast.error("Please sign in to add items to cart");
+      router.push("/auth/signin");
+      return;
+    }
+    
     try {
-      // Get user-specific cart key (this would need to be passed as a prop or from context)
-      // For now, using a simple approach - in production, use a proper cart context
-      const userId = typeof window !== 'undefined' ? localStorage.getItem('currentUserId') || 'guest' : 'guest';
+      // Get user-specific cart key
+      const userId = session.user.id;
       const cartKey = `cart_${userId}`;
       
       // Get existing cart from localStorage
