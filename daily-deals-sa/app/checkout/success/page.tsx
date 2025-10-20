@@ -5,7 +5,7 @@ import { useSearchParams } from "next/navigation"
 import { useSession } from "next-auth/react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { CheckCircle, Package, Mail, ArrowRight } from "lucide-react"
+import { CheckCircle, Package, Mail, ArrowRight, Truck, Calendar } from "lucide-react"
 import Link from "next/link"
 import { toast } from "sonner"
 
@@ -16,6 +16,9 @@ interface Order {
   status: string
   paymentStatus: string
   createdAt: string
+  trackingNumber: string | null
+  courierService: string | null
+  estimatedDelivery: string | null
   items: Array<{
     product: {
       name: string
@@ -96,6 +99,51 @@ function CheckoutSuccessContent() {
                     </p>
                   </div>
                 </div>
+
+                {/* Tracking Information */}
+                {order.trackingNumber && (
+                  <div className="bg-white p-4 rounded-lg border border-blue-200">
+                    <h3 className="font-semibold mb-3 flex items-center">
+                      <Truck className="h-5 w-5 mr-2 text-blue-600" />
+                      Shipping Information
+                    </h3>
+                    <div className="space-y-2">
+                      <div className="flex items-center justify-between p-3 bg-blue-50 rounded">
+                        <div>
+                          <p className="text-xs text-gray-600">Tracking Number</p>
+                          <p className="font-bold text-lg">{order.trackingNumber}</p>
+                        </div>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => {
+                            // Copy tracking number to clipboard
+                            navigator.clipboard.writeText(order.trackingNumber!);
+                            toast.success("Tracking number copied!");
+                          }}
+                        >
+                          Copy
+                        </Button>
+                      </div>
+                      {order.courierService && (
+                        <p className="text-sm">
+                          <span className="font-medium">Courier:</span> {order.courierService}
+                        </p>
+                      )}
+                      {order.estimatedDelivery && (
+                        <p className="text-sm flex items-center">
+                          <Calendar className="h-4 w-4 mr-1" />
+                          <span className="font-medium">Estimated Delivery:</span>{" "}
+                          {new Date(order.estimatedDelivery).toLocaleDateString("en-ZA", {
+                            year: "numeric",
+                            month: "long",
+                            day: "numeric",
+                          })}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                )}
 
                 <div className="bg-white p-4 rounded-lg border">
                   <h3 className="font-semibold mb-2">Order Items</h3>
