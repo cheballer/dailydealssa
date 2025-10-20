@@ -136,8 +136,10 @@ export default function CheckoutPage() {
 
   const fetchCartItems = () => {
     try {
-      // Get cart items from localStorage
-      const cartData = localStorage.getItem('cart')
+      // Get user-specific cart from localStorage
+      const userId = session?.user?.id || 'guest'
+      const cartKey = `cart_${userId}`
+      const cartData = localStorage.getItem(cartKey)
       
       if (cartData) {
         const items = JSON.parse(cartData)
@@ -164,6 +166,52 @@ export default function CheckoutPage() {
     } finally {
       setLoading(false)
     }
+  }
+
+  const updateCartItemQuantity = (itemId: string, newQuantity: number) => {
+    if (newQuantity <= 0) {
+      // Remove item if quantity is 0
+      removeFromCart(itemId)
+      return
+    }
+
+    const updatedCart = cartItems.map(item => 
+      item.id === itemId ? { ...item, quantity: newQuantity } : item
+    )
+    setCartItems(updatedCart)
+
+    // Update localStorage
+    const userId = session?.user?.id || 'guest'
+    const cartKey = `cart_${userId}`
+    localStorage.setItem(cartKey, JSON.stringify(updatedCart.map(i => ({
+      id: i.id,
+      name: i.product.name,
+      price: i.product.price,
+      image: i.product.image,
+      quantity: i.quantity
+    }))))
+    
+    window.dispatchEvent(new Event('cartUpdated'))
+    toast.success('Cart updated')
+  }
+
+  const removeFromCart = (itemId: string) => {
+    const updatedCart = cartItems.filter(i => i.id !== itemId)
+    setCartItems(updatedCart)
+
+    // Update localStorage
+    const userId = session?.user?.id || 'guest'
+    const cartKey = `cart_${userId}`
+    localStorage.setItem(cartKey, JSON.stringify(updatedCart.map(i => ({
+      id: i.id,
+      name: i.product.name,
+      price: i.product.price,
+      image: i.product.image,
+      quantity: i.quantity
+    }))))
+    
+    window.dispatchEvent(new Event('cartUpdated'))
+    toast.success('Item removed from cart')
   }
 
   const subtotal = cartItems.reduce((sum, item) => sum + (item.product.price * item.quantity), 0)
@@ -291,7 +339,7 @@ export default function CheckoutPage() {
             </CardHeader>
             <CardContent className="space-y-4">
               {cartItems.map((item) => (
-                <div key={item.id} className="flex items-center space-x-4">
+                <div key={item.id} className="flex items-center space-x-4 p-4 border rounded-lg">
                   <img
                     src={item.product.image}
                     alt={item.product.name}
@@ -299,26 +347,37 @@ export default function CheckoutPage() {
                   />
                   <div className="flex-1">
                     <h3 className="font-medium">{item.product.name}</h3>
-                    <p className="text-sm text-gray-500">Quantity: {item.quantity}</p>
+                    <p className="text-sm text-gray-500">R{item.product.price.toFixed(2)} each</p>
                   </div>
                   <div className="flex items-center space-x-3">
-                    <p className="font-medium">R{(item.product.price * item.quantity).toFixed(2)}</p>
+                    {/* Quantity Controls */}
+                    <div className="flex items-center border rounded-md">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="h-8 w-8 p-0"
+                        onClick={() => updateCartItemQuantity(item.id, item.quantity - 1)}
+                      >
+                        -
+                      </Button>
+                      <span className="px-3 py-1 min-w-[3rem] text-center">{item.quantity}</span>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="h-8 w-8 p-0"
+                        onClick={() => updateCartItemQuantity(item.id, item.quantity + 1)}
+                      >
+                        +
+                      </Button>
+                    </div>
+                    <p className="font-medium min-w-[5rem] text-right">
+                      R{(item.product.price * item.quantity).toFixed(2)}
+                    </p>
                     <Button
                       variant="ghost"
                       size="sm"
-                      onClick={() => {
-                        const updatedCart = cartItems.filter(i => i.id !== item.id);
-                        setCartItems(updatedCart);
-                        localStorage.setItem('cart', JSON.stringify(updatedCart.map(i => ({
-                          id: i.id,
-                          name: i.product.name,
-                          price: i.product.price,
-                          image: i.product.image,
-                          quantity: i.quantity
-                        }))));
-                        window.dispatchEvent(new Event('cartUpdated'));
-                        toast.success('Item removed from cart');
-                      }}
+                      onClick={() => removeFromCart(item.id)}
+                      className="text-red-500 hover:text-red-700"
                     >
                       <X className="h-4 w-4" />
                     </Button>
