@@ -4,6 +4,7 @@ import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/db';
 import { getPaymentProvider } from '@/lib/payments';
 import { getShippingProvider } from '@/lib/shipping';
+import { shiplogicService } from '@/lib/shiplogic';
 import { isDropActive, getStartOfToday, getEndOfToday } from '@/lib/free-drops';
 
 export async function POST(req: NextRequest) {
@@ -150,35 +151,91 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    // Create shipping label (mock)
-    const shippingProvider = getShippingProvider();
-    const shipment = await shippingProvider.createShipment({
-      orderId: orderNumber,
-      recipientName: shippingAddress ? 
-        `${shippingAddress.firstName} ${shippingAddress.lastName}` : 
-        user.name || 'Customer',
-      recipientPhone: shippingAddress?.phone || '',
-      address: shippingAddress ? {
-        line1: shippingAddress.address1,
-        line2: shippingAddress.address2 || undefined,
-        city: shippingAddress.city,
-        province: shippingAddress.province,
-        postalCode: shippingAddress.postalCode,
-        country: shippingAddress.country,
-      } : {
-        line1: 'To be provided',
-        city: 'Cape Town',
-        province: 'Western Cape',
-        postalCode: '8000',
-        country: 'South Africa',
-      },
-      items: orderItems.map((item) => ({
-        name: `Product ${item.productId}`,
-        quantity: item.quantity,
-        value: item.price,
-      })),
-    });
-    trackingNumber = shipment.trackingNumber;
+    // Create shipping label with Shiplogic
+    let trackingNumber: string | null = null;
+    let courierService = 'Shiplogic';
+    let estimatedDelivery: Date | null = null;
+
+    try {
+      // Get product details for shipment
+      const productIds = orderItems.map(item => item.productId);
+      const products = await prisma.product.findMany({
+        where: { id: { in: productIds } },
+        select: { id: true, name: true }
+      });
+
+      // Create shipment with Shiplogic
+      const shiplogicShipment = await shiplogicService.createShipment({
+        orderNumber,
+        customerName: shippingAddress ? 
+          `${shippingAddress.firstName} ${shippingAddress.lastName}` : 
+          user.name || 'Customer',
+        customerEmail: user.email,
+        customerPhone: shippingAddress?.phone || '',
+        deliveryAddress: shippingAddress ? {
+          street: shippingAddress.address1,
+          city: shippingAddress.city,
+          province: shippingAddress.province,
+          postalCode: shippingAddress.postalCode,
+        } : {
+          street: 'To be provided',
+          city: 'Cape Town',
+          province: 'Western Cape',
+          postalCode: '8000',
+        },
+        items: orderItems.map((item) => {
+          const product = products.find(p => p.id === item.productId);
+          return {
+            description: product?.name || 'Product',
+            quantity: item.quantity,
+            weight: 1, // kg per item
+          };
+        }),
+        totalValue: total,
+      });
+
+      trackingNumber = shiplogicShipment.trackingNumber;
+      estimatedDelivery = shiplogicShipment.estimatedDelivery 
+        ? new Date(shiplogicShipment.estimatedDelivery) 
+        : null;
+
+      console.log('✅ Shiplogic shipment created:', trackingNumber);
+    } catch (shiplogicError) {
+      console.error('❌ Shiplogic error, using fallback:', shiplogicError);
+      
+      // Fallback to mock shipping provider
+      const shippingProvider = getShippingProvider();
+      const shipment = await shippingProvider.createShipment({
+        orderId: orderNumber,
+        recipientName: shippingAddress ? 
+          `${shippingAddress.firstName} ${shippingAddress.lastName}` : 
+          user.name || 'Customer',
+        recipientPhone: shippingAddress?.phone || '',
+        address: shippingAddress ? {
+          line1: shippingAddress.address1,
+          line2: shippingAddress.address2 || undefined,
+          city: shippingAddress.city,
+          province: shippingAddress.province,
+          postalCode: shippingAddress.postalCode,
+          country: shippingAddress.country,
+        } : {
+          line1: 'To be provided',
+          city: 'Cape Town',
+          province: 'Western Cape',
+          postalCode: '8000',
+          country: 'South Africa',
+        },
+        items: orderItems.map((item) => ({
+          name: `Product ${item.productId}`,
+          quantity: item.quantity,
+          value: item.price,
+        })),
+      });
+      
+      trackingNumber = shipment.trackingNumber;
+      courierService = shipment.service;
+      estimatedDelivery = shipment.estimatedDelivery;
+    }
 
     // Create order
     const order = await prisma.order.create({
@@ -194,8 +251,8 @@ export async function POST(req: NextRequest) {
         paymentIntentId,
         shippingAddressId: shippingAddress?.id || null,
         trackingNumber,
-        courierService: shipment.service,
-        estimatedDelivery: shipment.estimatedDelivery,
+        courierService,
+        estimatedDelivery,
         items: {
           create: orderItems.map((item) => ({
             productId: item.productId,
