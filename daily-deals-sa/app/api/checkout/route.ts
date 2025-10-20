@@ -125,8 +125,10 @@ export async function POST(req: NextRequest) {
     // Generate order number
     const orderNumber = `ORD-${Date.now()}-${Math.random().toString(36).substring(2, 9).toUpperCase()}`;
 
-    let paymentIntentId = null;
-    let trackingNumber = null;
+    let paymentIntentId: string | null = null;
+    let trackingNumber: string | null = null;
+    let courierService = 'Shiplogic';
+    let estimatedDelivery: Date | null = null;
 
     // Handle payment
     if (total === 0) {
@@ -152,9 +154,6 @@ export async function POST(req: NextRequest) {
     }
 
     // Create shipping label with Shiplogic
-    let trackingNumber: string | null = null;
-    let courierService = 'Shiplogic';
-    let estimatedDelivery: Date | null = null;
 
     try {
       // Get product details for shipment
