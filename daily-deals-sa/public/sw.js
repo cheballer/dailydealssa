@@ -13,3 +13,6 @@ self.addEventListener('fetch', (event) => {
   // Let next-pwa handle caching
 })
 
+
+
+

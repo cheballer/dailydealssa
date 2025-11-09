@@ -16,11 +16,11 @@ export function HeroSection() {
           </div>
 
           <h1 className="mb-6 text-4xl font-bold tracking-tight text-white md:text-6xl text-balance">
-            Shopalot: South Africa's Smart Way to Save
+            DailyDealzSA: South Africa's Smart Way to Save
           </h1>
 
           <p className="mb-8 text-lg text-white/90 md:text-xl text-pretty">
-            Shop curated electronics, appliances, and hardware with vibrant IBM-inspired blues and dependable daily savings.
+            Shop curated electronics, appliances, and hardware with vibrant IBM-inspired blues and dependable DailyDealzSA savings.
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">

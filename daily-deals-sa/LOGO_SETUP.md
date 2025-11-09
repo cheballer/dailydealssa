@@ -119,3 +119,6 @@ Once you add the logo file to `/public/logo.png`:
 
 **Just save your logo as `logo.png` in the `/public` folder and you're all set!** 🚀
 
+
+
+

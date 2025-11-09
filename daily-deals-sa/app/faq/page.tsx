@@ -15,7 +15,7 @@ export default function FAQPage() {
           <HelpCircle className="h-16 w-16 mx-auto mb-4 text-primary" />
           <h1 className="text-4xl font-bold mb-4">Frequently Asked Questions</h1>
           <p className="text-lg text-muted-foreground">
-            Find answers to common questions about Shopalot
+            Find answers to common questions about DailyDealzSA
           </p>
         </div>
 
@@ -25,10 +25,10 @@ export default function FAQPage() {
           </CardHeader>
           <CardContent>
             <Accordion type="single" collapsible className="w-full">
-              <AccordionItem value="what-is-shopalot">
-                <AccordionTrigger>What is Shopalot?</AccordionTrigger>
+              <AccordionItem value="what-is-dailydealzsa">
+                <AccordionTrigger>What is DailyDealzSA?</AccordionTrigger>
                 <AccordionContent>
-                  Shopalot is South Africa's blue-tag marketplace for curated savings on 
+                  DailyDealzSA is South Africa's blue-tag marketplace for curated savings on 
                   electronics, appliances, hardware, and more. We refresh signature deals 
                   every 24 hours plus 10 free drops daily!
                 </AccordionContent>
@@ -134,7 +134,7 @@ export default function FAQPage() {
               <AccordionItem value="how-to-return">
                 <AccordionTrigger>How do I return an item?</AccordionTrigger>
                 <AccordionContent>
-                  Contact our customer service team at returns@shopalot.co.za with your 
+                  Contact our customer service team at returns@dailydealzsa.co.za with your 
                   order number. We'll provide a return authorization number and shipping 
                   label. For detailed instructions, visit our Returns page.
                 </AccordionContent>
@@ -168,7 +168,7 @@ export default function FAQPage() {
               <AccordionItem value="product-condition">
                 <AccordionTrigger>Are your products new or used?</AccordionTrigger>
                 <AccordionContent>
-                  All products sold on Shopalot are brand new, unless specifically 
+                  All products sold on DailyDealzSA are brand new, unless specifically 
                   marked as refurbished or pre-owned. We source directly from manufacturers 
                   and authorized distributors.
                 </AccordionContent>
@@ -253,7 +253,7 @@ export default function FAQPage() {
               Can't find the answer you're looking for? Our customer service team is here to help!
             </p>
             <p className="mt-4">
-              Email: support@shopalot.co.za<br />
+              Email: support@dailydealzsa.co.za<br />
               Phone: 0861 234 567<br />
               Hours: Monday - Friday, 8:00 AM - 5:00 PM SAST
             </p>

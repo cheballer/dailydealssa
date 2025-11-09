@@ -228,3 +228,6 @@ Once you have the Postman collection and API details:
 
 Once you have it, we can properly integrate Shiplogic with your Daily Deals SA platform.
 
+
+
+

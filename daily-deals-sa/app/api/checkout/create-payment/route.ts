@@ -18,7 +18,7 @@ export async function POST(request: NextRequest) {
     console.log("💰 Total amount:", total)
 
     // Create order in database first
-    const orderNumber = `SL-${Date.now()}-${Math.random().toString(36).substr(2, 9).toUpperCase()}`
+    const orderNumber = `DDZ-${Date.now()}-${Math.random().toString(36).substr(2, 9).toUpperCase()}`
     
     // First, create the shipping address
     const shippingAddress = await db.address.create({
@@ -62,7 +62,7 @@ export async function POST(request: NextRequest) {
 
     // Create Yoco checkout request
     const baseUrl = process.env.NEXTAUTH_URL || "http://localhost:3000"
-    const description = `Shopalot - Order #${order.orderNumber}`
+    const description = `DailyDealzSA - Order #${order.orderNumber}`
     
     console.log("🔗 Creating Yoco checkout...")
     console.log("Base URL:", baseUrl)

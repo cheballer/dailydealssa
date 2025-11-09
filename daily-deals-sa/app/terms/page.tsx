@@ -19,7 +19,7 @@ export default function TermsPage() {
           </CardHeader>
           <CardContent className="prose prose-sm max-w-none">
             <p>
-              By accessing and using Shopalot ("the Website"), you accept and agree to be 
+              By accessing and using DailyDealzSA ("the Website"), you accept and agree to be 
               bound by the terms and provision of this agreement. If you do not agree to abide 
               by the above, please do not use this service.
             </p>
@@ -32,7 +32,7 @@ export default function TermsPage() {
           </CardHeader>
           <CardContent className="prose prose-sm max-w-none">
             <p>Permission is granted to temporarily download one copy of the materials on 
-            Shopalot's website for personal, non-commercial transitory viewing only. 
+            DailyDealzSA's website for personal, non-commercial transitory viewing only. 
             This is the grant of a license, not a transfer of title, and under this license you may not:</p>
             <ul className="list-disc pl-6 space-y-1 mt-2">
               <li>Modify or copy the materials</li>
@@ -64,7 +64,7 @@ export default function TermsPage() {
           </CardHeader>
           <CardContent className="prose prose-sm max-w-none">
             <ul className="list-disc pl-6 space-y-2">
-              <li>All orders are subject to product availability and acceptance by Shopalot</li>
+              <li>All orders are subject to product availability and acceptance by DailyDealzSA</li>
               <li>Prices are in South African Rand (ZAR) and include VAT where applicable</li>
               <li>Payment must be received before order processing begins</li>
               <li>We accept major credit cards and other payment methods as displayed on our site</li>
@@ -136,8 +136,8 @@ export default function TermsPage() {
           </CardHeader>
           <CardContent className="prose prose-sm max-w-none">
             <p>
-              The materials on Shopalot's website are provided on an 'as is' basis. 
-              Shopalot makes no warranties, expressed or implied, and hereby disclaims 
+              The materials on DailyDealzSA's website are provided on an 'as is' basis. 
+              DailyDealzSA makes no warranties, expressed or implied, and hereby disclaims 
               and negates all other warranties including, without limitation, implied warranties 
               or conditions of merchantability, fitness for a particular purpose, or non-infringement 
               of intellectual property or other violation of rights.
@@ -151,10 +151,10 @@ export default function TermsPage() {
           </CardHeader>
           <CardContent className="prose prose-sm max-w-none">
             <p>
-              In no event shall Shopalot or its suppliers be liable for any damages 
+              In no event shall DailyDealzSA or its suppliers be liable for any damages 
               (including, without limitation, damages for loss of data or profit, or due to 
               business interruption) arising out of the use or inability to use the materials 
-              on Shopalot's website.
+              on DailyDealzSA's website.
             </p>
           </CardContent>
         </Card>
@@ -194,7 +194,7 @@ export default function TermsPage() {
               If you have any questions about these Terms of Service, please contact us at:
             </p>
             <p className="mt-2">
-              Email: legal@shopalot.co.za<br />
+              Email: legal@dailydealzsa.co.za<br />
               Phone: 0861 234 567
             </p>
           </CardContent>

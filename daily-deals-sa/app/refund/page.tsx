@@ -19,7 +19,7 @@ export default function RefundPage() {
           </CardHeader>
           <CardContent className="prose prose-sm max-w-none">
             <p>
-              At Shopalot, we want you to be completely satisfied with your purchase. 
+              At DailyDealzSA, we want you to be completely satisfied with your purchase. 
               If you're not happy with your order, we offer a straightforward refund policy 
               to ensure your peace of mind.
             </p>
@@ -61,7 +61,7 @@ export default function RefundPage() {
           </CardHeader>
           <CardContent className="prose prose-sm max-w-none">
             <ol className="list-decimal pl-6 space-y-2">
-              <li>Contact our customer service team at returns@shopalot.co.za or call 0861 234 567</li>
+              <li>Contact our customer service team at returns@dailydealzsa.co.za or call 0861 234 567</li>
               <li>Provide your order number and reason for return</li>
               <li>We'll send you a return authorization number and shipping instructions</li>
               <li>Package the item securely with the return label we provide</li>
@@ -177,7 +177,7 @@ export default function RefundPage() {
               If you have any questions about our refund policy, please contact us:
             </p>
             <p className="mt-2">
-              Email: returns@shopalot.co.za<br />
+              Email: returns@dailydealzsa.co.za<br />
               Phone: 0861 234 567<br />
               Hours: Monday - Friday, 8:00 AM - 5:00 PM SAST
             </p>

@@ -30,8 +30,8 @@ export function DailyDeals() {
   // Fallback product
   const defaultDeal = {
     id: "1",
-    name: "Check Out Today's Shopalot Deals",
-    description: "Blue-tag bargains and 10 free drops powered by Shopalot's curated buying team. Don't miss the refresh!",
+    name: "Check Out Today's DailyDealzSA Deals",
+    description: "Blue-tag bargains and 10 free drops powered by DailyDealzSA's curated buying team. Don't miss the refresh!",
     price: 0,
     originalPrice: 0,
     discount: 0,
@@ -48,7 +48,7 @@ export function DailyDeals() {
         <div className="mb-8 text-center">
           <div className="mb-3 inline-flex items-center gap-2 text-primary">
             <Zap className="h-6 w-6 fill-primary" />
-            <span className="text-sm font-bold uppercase tracking-wider">Shopalot Specials + Free Drops</span>
+            <span className="text-sm font-bold uppercase tracking-wider">DailyDealzSA Specials + Free Drops</span>
           </div>
           <h2 className="text-3xl font-bold text-foreground md:text-4xl text-balance">Today&apos;s Blue-Tag Offers</h2>
         </div>

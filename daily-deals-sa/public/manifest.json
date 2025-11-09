@@ -1,7 +1,7 @@
 {
-  "name": "Shopalot",
-  "short_name": "Shopalot",
-  "description": "South Africa's blue-tag savings on electronics, appliances, hardware and more",
+  "name": "DailyDealzSA",
+  "short_name": "DailyDealzSA",
+  "description": "South Africa's blue-tag savings on electronics, appliances, hardware and more from DailyDealzSA",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",

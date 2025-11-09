@@ -19,7 +19,7 @@ export default function PrivacyPage() {
           </CardHeader>
           <CardContent className="prose prose-sm max-w-none">
             <p>
-              Shopalot ("we," "our," or "us") is committed to protecting your privacy. 
+              DailyDealzSA ("we," "our," or "us") is committed to protecting your privacy. 
               This Privacy Policy explains how we collect, use, disclose, and safeguard your 
               information when you visit our website.
             </p>
@@ -130,7 +130,7 @@ export default function PrivacyPage() {
               If you have questions about this Privacy Policy, please contact us at:
             </p>
             <p className="mt-2">
-              Email: privacy@shopalot.co.za<br />
+              Email: privacy@dailydealzsa.co.za<br />
               Phone: 0861 234 567
             </p>
           </CardContent>

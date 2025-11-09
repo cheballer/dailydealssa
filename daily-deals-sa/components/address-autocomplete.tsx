@@ -120,3 +120,6 @@ function parseGoogleAddress(place: google.maps.places.PlaceResult) {
   return address;
 }
 
+
+
+

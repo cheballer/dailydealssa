@@ -191,3 +191,6 @@ You'll be able to upload product images directly from the admin panel!
 
 **Start uploading images!** 📸
 
+
+
+

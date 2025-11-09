@@ -19,7 +19,7 @@ export default function ReturnsPage() {
           </CardHeader>
           <CardContent className="prose prose-sm max-w-none">
             <p>
-              Returning an item to Shopalot is quick and easy. Follow these simple 
+              Returning an item to DailyDealzSA is quick and easy. Follow these simple 
               steps to initiate your return.
             </p>
           </CardContent>
@@ -34,7 +34,7 @@ export default function ReturnsPage() {
               Reach out to our customer service team within 7 days of receiving your order:
             </p>
             <ul className="list-disc pl-6 space-y-1 mt-2">
-              <li>Email: returns@shopalot.co.za</li>
+              <li>Email: returns@dailydealzsa.co.za</li>
               <li>Phone: 0861 234 567</li>
               <li>Include your order number and reason for return</li>
             </ul>
@@ -144,7 +144,7 @@ export default function ReturnsPage() {
           </CardHeader>
           <CardContent className="prose prose-sm max-w-none">
             <p>
-              Shopalot Returns<br />
+              DailyDealzSA Returns<br />
               123 Main Street<br />
               Cape Town, 8001<br />
               South Africa<br />
@@ -194,7 +194,7 @@ export default function ReturnsPage() {
               Our customer service team is here to help with any questions about returns:
             </p>
             <p className="mt-2">
-              Email: returns@shopalot.co.za<br />
+              Email: returns@dailydealzsa.co.za<br />
               Phone: 0861 234 567<br />
               Hours: Monday - Friday, 8:00 AM - 5:00 PM SAST
             </p>

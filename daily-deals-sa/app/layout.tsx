@@ -23,27 +23,27 @@ const ibmPlexMono = IBM_Plex_Mono({
 })
 
 export const metadata: Metadata = {
-  title: "Shopalot - South Africa's Smart Way to Save",
-  description: "Discover curated savings on electronics, appliances, and hardware with daily blue-tag specials from Shopalot.",
+  title: "DailyDealzSA - South Africa's Smart Way to Save",
+  description: "Discover curated savings on electronics, appliances, and hardware with daily blue-tag specials from DailyDealzSA.",
   generator: "v0.app",
   manifest: "/manifest.json",
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
-    title: "Shopalot",
+    title: "DailyDealzSA",
   },
   formatDetection: {
     telephone: false,
   },
   openGraph: {
     type: "website",
-    siteName: "Shopalot",
-    title: "Shopalot - South Africa's Smart Way to Save",
-    description: "Discover curated savings on electronics, appliances, and hardware with daily blue-tag specials from Shopalot.",
+    siteName: "DailyDealzSA",
+    title: "DailyDealzSA - South Africa's Smart Way to Save",
+    description: "Discover curated savings on electronics, appliances, and hardware with daily blue-tag specials from DailyDealzSA.",
   },
   twitter: {
     card: "summary",
-    title: "Shopalot",
+    title: "DailyDealzSA",
     description: "South Africa's blue-tag savings destination",
   },
 }
