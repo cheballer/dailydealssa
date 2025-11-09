@@ -6,6 +6,7 @@ import { Providers } from "@/components/providers"
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
 import { InstallPrompt } from "@/components/install-prompt"
+import { WhatsAppButton } from "@/components/whatsapp-button"
 import "./globals.css"
 
 const ibmPlexSans = IBM_Plex_Sans({
@@ -83,6 +84,7 @@ export default function RootLayout({
             </main>
             <Footer />
           </div>
+          <WhatsAppButton />
           <InstallPrompt />
         </Providers>
         <Analytics />

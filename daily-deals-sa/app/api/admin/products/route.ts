@@ -2,6 +2,27 @@ import { NextRequest, NextResponse } from "next/server"
 import { getServerSession } from "next-auth"
 import { authOptions } from "@/lib/auth"
 import { db } from "@/lib/db"
+import { CATEGORIES } from "@/lib/constants"
+import { generateProductSku } from "@/lib/products"
+
+const CATEGORY_NAMES = new Set(CATEGORIES.map((category) => category.name))
+
+async function getUniqueSku(name?: string, category?: string) {
+  let attempts = 0
+  let sku: string
+  do {
+    sku = generateProductSku(name, category)
+    const existing = await db.product.findUnique({
+      where: { sku },
+    })
+    if (!existing) {
+      return sku
+    }
+    attempts += 1
+  } while (attempts < 5)
+
+  return `${generateProductSku().slice(0, 12)}${Math.random().toString(36).substring(2, 6).toUpperCase()}`
+}
 
 export async function GET(request: NextRequest) {
   try {
@@ -49,15 +70,28 @@ export async function POST(request: NextRequest) {
     } = body
 
     // Check if SKU already exists
-    const existingProduct = await db.product.findUnique({
-      where: { sku }
-    })
-
-    if (existingProduct) {
+    if (!CATEGORY_NAMES.has(category)) {
       return NextResponse.json(
-        { error: "Product with this SKU already exists" },
+        { error: "Invalid category" },
         { status: 400 }
       )
+    }
+
+    let normalizedSku = typeof sku === "string" ? sku.trim().toUpperCase() : ""
+
+    if (normalizedSku) {
+      const existingProduct = await db.product.findUnique({
+        where: { sku: normalizedSku }
+      })
+
+      if (existingProduct) {
+        return NextResponse.json(
+          { error: "Product with this SKU already exists" },
+          { status: 400 }
+        )
+      }
+    } else {
+      normalizedSku = await getUniqueSku(name, category)
     }
 
     const product = await db.product.create({
@@ -70,7 +104,7 @@ export async function POST(request: NextRequest) {
         brand,
         image,
         stock: parseInt(stock),
-        sku,
+        sku: normalizedSku,
         featured: featured || false,
         active: active !== false
       }

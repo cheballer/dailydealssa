@@ -24,9 +24,12 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Switch } from "@/components/ui/switch"
-import { Plus, Edit, Trash2, Eye } from "lucide-react"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Plus, Edit, Trash2 } from "lucide-react"
 import { toast } from "sonner"
 import { ImageUpload } from "@/components/image-upload"
+import { CATEGORIES } from "@/lib/constants"
+import { generateProductSku } from "@/lib/products"
 
 interface Product {
   id: string
@@ -50,7 +53,7 @@ export default function AdminProducts() {
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [editingProduct, setEditingProduct] = useState<Product | null>(null)
 
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState(() => ({
     name: "",
     description: "",
     price: "",
@@ -59,10 +62,10 @@ export default function AdminProducts() {
     brand: "",
     image: "",
     stock: "",
-    sku: "",
+    sku: generateProductSku(),
     featured: false,
     active: true
-  })
+  }))
 
   useEffect(() => {
     fetchProducts()
@@ -161,7 +164,7 @@ export default function AdminProducts() {
       brand: "",
       image: "",
       stock: "",
-      sku: "",
+      sku: generateProductSku(),
       featured: false,
       active: true
     })
@@ -210,14 +213,29 @@ export default function AdminProducts() {
                     required
                   />
                 </div>
-                <div>
-                  <Label htmlFor="sku">SKU</Label>
-                  <Input
-                    id="sku"
-                    value={formData.sku}
-                    onChange={(e) => setFormData({ ...formData, sku: e.target.value })}
-                    required
-                  />
+                <div className="space-y-2">
+                  <Label htmlFor="sku">Product ID</Label>
+                  <div className="flex items-center gap-2">
+                    <Input
+                      id="sku"
+                      value={formData.sku}
+                      readOnly
+                    />
+                    {!editingProduct && (
+                      <Button
+                        type="button"
+                        variant="outline"
+                        onClick={() =>
+                          setFormData((prev) => ({
+                            ...prev,
+                            sku: generateProductSku(prev.name, prev.category),
+                          }))
+                        }
+                      >
+                        Regenerate
+                      </Button>
+                    )}
+                  </div>
                 </div>
               </div>
               
@@ -234,12 +252,21 @@ export default function AdminProducts() {
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <Label htmlFor="category">Category</Label>
-                  <Input
-                    id="category"
+                  <Select
                     value={formData.category}
-                    onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                    required
-                  />
+                    onValueChange={(value) => setFormData({ ...formData, category: value })}
+                  >
+                    <SelectTrigger id="category" className="w-full">
+                      <SelectValue placeholder="Select a category" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {CATEGORIES.map((category) => (
+                        <SelectItem key={category.slug} value={category.name}>
+                          {category.icon} {category.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 </div>
                 <div>
                   <Label htmlFor="brand">Brand</Label>
