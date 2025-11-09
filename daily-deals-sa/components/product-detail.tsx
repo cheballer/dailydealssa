@@ -41,8 +41,35 @@ export function ProductDetail({ product }: ProductDetailProps) {
   const hasDiscount = (product.discount ?? 0) > 0
 
   const handleAddToCart = () => {
+    // Check if running in the browser before using localStorage
+    if (typeof window === "undefined") {
+      toast.error("Cart is unavailable in this environment")
+      return
+    }
+
+    // Ensure we have an authenticated user by matching header logic
+    const sessionData = localStorage.getItem("nextauth.message")
+    let userId: string | undefined
+
     try {
-      const existingCart = localStorage.getItem('cart')
+      if (sessionData) {
+        const parsed = JSON.parse(sessionData)
+        userId = parsed?.data?.user?.id
+      }
+    } catch (error) {
+      console.error("Failed to read session data:", error)
+    }
+
+    if (!userId) {
+      toast.error("Please sign in to add items to cart.")
+      window.location.href = "/auth/signin"
+      return
+    }
+
+    const cartKey = `cart_${userId}`
+
+    try {
+      const existingCart = localStorage.getItem(cartKey)
       const cart = existingCart ? JSON.parse(existingCart) : []
       
       const existingItem = cart.find((item: any) => item.id === product.id)
@@ -59,7 +86,7 @@ export function ProductDetail({ product }: ProductDetailProps) {
         })
       }
       
-      localStorage.setItem('cart', JSON.stringify(cart))
+      localStorage.setItem(cartKey, JSON.stringify(cart))
       window.dispatchEvent(new Event('cartUpdated'))
       
       toast.success(isFree ? `Free item added to cart!` : `${quantity} item(s) added to cart!`)
