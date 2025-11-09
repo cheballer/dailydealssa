@@ -7,6 +7,8 @@ import { ShoppingCart, Zap, Package, Truck, Shield } from "lucide-react"
 import { isDropActive } from "@/lib/free-drops"
 import { useState } from "react"
 import { toast } from "sonner"
+import { useSession } from "next-auth/react"
+import { useRouter } from "next/navigation"
 
 interface FreeDrop {
   id: string
@@ -36,6 +38,8 @@ interface ProductDetailProps {
 export function ProductDetail({ product }: ProductDetailProps) {
   const [selectedImage, setSelectedImage] = useState(product.image)
   const [quantity, setQuantity] = useState(1)
+  const { data: session, status } = useSession()
+  const router = useRouter()
   const isFree = product.freeDrop && isDropActive(product.freeDrop.dropAt, product.freeDrop.claimedAt)
   const displayPrice = isFree ? 0 : (product.price ?? 0)
   const hasDiscount = (product.discount ?? 0) > 0
@@ -47,22 +51,15 @@ export function ProductDetail({ product }: ProductDetailProps) {
       return
     }
 
-    // Ensure we have an authenticated user by matching header logic
-    const sessionData = localStorage.getItem("nextauth.message")
-    let userId: string | undefined
-
-    try {
-      if (sessionData) {
-        const parsed = JSON.parse(sessionData)
-        userId = parsed?.data?.user?.id
-      }
-    } catch (error) {
-      console.error("Failed to read session data:", error)
-    }
+    const userId = session?.user?.id
 
     if (!userId) {
+      if (status === "loading") {
+        toast.warning("Please wait while we confirm your session…")
+        return
+      }
       toast.error("Please sign in to add items to cart.")
-      window.location.href = "/auth/signin"
+      router.push("/auth/signin")
       return
     }
 
