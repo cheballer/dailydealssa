@@ -10,7 +10,7 @@ import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Separator } from "@/components/ui/separator"
 import { toast } from "sonner"
-import { ShoppingCart, CreditCard, MapPin, Loader2, X, Plus } from "lucide-react"
+import { ShoppingCart, CreditCard, MapPin, Loader2, X, Plus, Trash2 } from "lucide-react"
 import { AddressAutocomplete } from "@/components/address-autocomplete"
 
 interface CartItem {
@@ -148,6 +148,53 @@ export default function CheckoutPage() {
       }
     } catch (error) {
       console.error('Error fetching saved addresses:', error)
+    }
+  }
+
+  const resetShippingInfo = () => {
+    setShippingInfo({
+      firstName: "",
+      lastName: "",
+      address: "",
+      city: "",
+      province: "",
+      postalCode: "",
+      phone: "",
+    })
+    setSelectedAddressId(null)
+    setUseSavedAddress(false)
+  }
+
+  const handleDeleteSavedAddress = async (
+    event: React.MouseEvent,
+    addressId: string
+  ) => {
+    event.stopPropagation()
+    event.preventDefault()
+
+    if (!confirm("Remove this saved address?")) {
+      return
+    }
+
+    try {
+      const response = await fetch(`/api/user/addresses/${addressId}`, {
+        method: "DELETE",
+      })
+
+      if (response.ok) {
+        setSavedAddresses((prev) => prev.filter((addr) => addr.id !== addressId))
+        toast.success("Address removed")
+
+        if (selectedAddressId === addressId) {
+          resetShippingInfo()
+        }
+      } else {
+        const error = await response.json().catch(() => ({}))
+        toast.error(error.error || "Failed to delete address")
+      }
+    } catch (error) {
+      console.error("Error deleting saved address:", error)
+      toast.error("An error occurred")
     }
   }
 
@@ -315,7 +362,7 @@ export default function CheckoutPage() {
                           selectedAddressId === address.id ? 'border-primary bg-primary/5' : ''
                         }`}
                       >
-                        <div className="flex items-start justify-between">
+                        <div className="flex items-start justify-between gap-3">
                           <div>
                             <p className="font-medium">
                               {address.firstName} {address.lastName}
@@ -324,11 +371,23 @@ export default function CheckoutPage() {
                               {address.address1}, {address.city}, {address.province} {address.postalCode}
                             </p>
                           </div>
-                          {address.isDefault && (
-                            <span className="text-xs bg-primary text-primary-foreground px-2 py-1 rounded">
-                              Default
-                            </span>
-                          )}
+                          <div className="flex items-start gap-2">
+                            {address.isDefault && (
+                              <span className="text-xs bg-primary text-primary-foreground px-2 py-1 rounded">
+                                Default
+                              </span>
+                            )}
+                            <Button
+                              type="button"
+                              variant="ghost"
+                              size="icon-sm"
+                              className="text-muted-foreground hover:text-destructive"
+                              onClick={(event) => handleDeleteSavedAddress(event, address.id)}
+                              aria-label="Delete saved address"
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </Button>
+                          </div>
                         </div>
                       </button>
                     ))}

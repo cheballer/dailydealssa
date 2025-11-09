@@ -155,8 +155,8 @@ export function ProductCard({ product }: ProductCardProps) {
       </CardContent>
 
       <CardFooter className="px-5 pb-5 pt-0">
-        <Button 
-          className="w-full text-sm font-semibold shadow-md" 
+        <Button
+          className="w-full text-sm font-semibold shadow-md transition-colors duration-200 hover:from-[#3658b8] hover:to-[#1a2f6d]"
           size="lg"
           onClick={handleAddToCart}
         >
