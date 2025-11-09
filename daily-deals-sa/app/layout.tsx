@@ -1,6 +1,6 @@
 import type React from "react"
 import type { Metadata, Viewport } from "next"
-import { IBM_Plex_Sans, IBM_Plex_Mono } from "next/font/google"
+import { Space_Grotesk, Inter } from "next/font/google"
 import { Analytics } from "@vercel/analytics/next"
 import { Providers } from "@/components/providers"
 import { Header } from "@/components/header"
@@ -8,17 +8,17 @@ import { Footer } from "@/components/footer"
 import { WhatsAppButton } from "@/components/whatsapp-button"
 import "./globals.css"
 
-const ibmPlexSans = IBM_Plex_Sans({
+const spaceGrotesk = Space_Grotesk({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
-  variable: "--font-ibm-plex-sans",
+  variable: "--font-display",
   display: "swap",
 })
 
-const ibmPlexMono = IBM_Plex_Mono({
+const inter = Inter({
   subsets: ["latin"],
-  weight: ["400", "500", "600"],
-  variable: "--font-ibm-plex-mono",
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-sans",
   display: "swap",
 })
 
@@ -74,7 +74,7 @@ export default function RootLayout({
           />
         )}
       </head>
-      <body className={`font-sans ${ibmPlexSans.variable} ${ibmPlexMono.variable}`}>
+      <body className={`font-sans ${spaceGrotesk.variable} ${inter.variable}`}>
         <Providers>
           <div className="flex flex-col min-h-screen">
             <Header />

@@ -93,21 +93,21 @@ export function ProductCard({ product }: ProductCardProps) {
   };
 
   return (
-    <Card className="group overflow-hidden transition-all hover:shadow-lg hover:border-primary/30">
+    <Card className="group overflow-hidden rounded-3xl border border-border/70 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:border-primary/30">
       <Link href={`/products/${product.id}`}>
-        <div className="relative aspect-square overflow-hidden bg-muted">
+        <div className="relative aspect-square overflow-hidden bg-gradient-to-br from-white via-white to-[#f2f5ff]">
           <img
             src={product.image || "/placeholder.svg"}
             alt={product.name}
-            className="h-full w-full object-cover transition-transform group-hover:scale-105"
+            className="h-full w-full object-contain p-6 transition-transform duration-300 group-hover:scale-[1.03]"
           />
           {isFree ? (
-            <Badge className="absolute top-3 right-3 bg-green-600 text-white font-bold text-sm px-3 py-1 animate-pulse">
+            <Badge className="absolute top-3 right-3 bg-green-600 text-white font-semibold px-3 py-1 shadow-md">
               <Zap className="h-3 w-3 mr-1 inline fill-current" />
               FREE DROP!
             </Badge>
           ) : hasDiscount ? (
-            <Badge className="absolute top-3 right-3 bg-[var(--deal-badge)] text-[var(--deal-badge-foreground)] font-bold">
+            <Badge className="absolute top-3 right-3 bg-[var(--deal-badge)] text-[var(--deal-badge-foreground)] font-semibold px-3 py-1 shadow-md">
               {product.discount}% OFF
             </Badge>
           ) : null}
@@ -124,19 +124,26 @@ export function ProductCard({ product }: ProductCardProps) {
         </div>
       </Link>
 
-      <CardContent className="p-4">
-        <Badge variant="secondary" className="mb-2 text-xs">
+      <CardContent className="space-y-4 p-5">
+        <Badge variant="secondary" className="text-[11px] font-medium uppercase tracking-wide">
           {product.category}
         </Badge>
-        <h3 className="mb-2 text-lg font-bold text-card-foreground line-clamp-1">{product.name}</h3>
-        <p className="mb-3 text-sm text-muted-foreground line-clamp-2 leading-relaxed">{product.description}</p>
+        <h3
+          className="line-clamp-1 text-xl font-semibold tracking-tight text-[#152548]"
+          style={{ fontFamily: "var(--font-display)" }}
+        >
+          {product.name}
+        </h3>
+        <p className="text-sm leading-relaxed text-muted-foreground line-clamp-2">
+          {product.description}
+        </p>
 
         <div className="flex items-baseline gap-2">
           {isFree ? (
             <span className="text-3xl font-bold text-green-600">FREE</span>
           ) : (
             <>
-              <span className="text-2xl font-bold text-primary">R{displayPrice.toLocaleString()}</span>
+              <span className="text-2xl font-semibold text-primary">R{displayPrice.toLocaleString()}</span>
               {product.originalPrice && product.originalPrice > displayPrice && (
                 <span className="text-sm text-muted-foreground line-through">
                   R{product.originalPrice.toLocaleString()}
@@ -147,10 +154,10 @@ export function ProductCard({ product }: ProductCardProps) {
         </div>
       </CardContent>
 
-      <CardFooter className="p-4 pt-0">
+      <CardFooter className="px-5 pb-5 pt-0">
         <Button 
-          className="w-full font-semibold" 
-          size="sm"
+          className="w-full text-sm font-semibold shadow-md" 
+          size="lg"
           onClick={handleAddToCart}
         >
           <ShoppingCart className="mr-2 h-4 w-4" />
