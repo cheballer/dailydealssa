@@ -53,7 +53,7 @@ export function InstallPrompt() {
     <div className="fixed bottom-4 left-4 right-4 z-50 md:left-auto md:right-4 md:max-w-sm animate-in slide-in-from-bottom-5 duration-300">
       <div className="bg-white border-2 border-primary rounded-lg shadow-2xl p-4 flex items-center justify-between gap-4">
         <div className="flex-1">
-          <p className="font-semibold text-sm">Install Daily Deals SA</p>
+          <p className="font-semibold text-sm">Install Shopalot</p>
           <p className="text-xs text-gray-600">Add to home screen for quick access</p>
         </div>
         <div className="flex gap-2">
@@ -73,4 +73,7 @@ export function InstallPrompt() {
     </div>
   )
 }
+
+
+
 

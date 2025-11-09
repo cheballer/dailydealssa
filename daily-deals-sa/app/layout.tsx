@@ -1,7 +1,6 @@
 import type React from "react"
 import type { Metadata, Viewport } from "next"
-import { GeistSans } from "geist/font/sans"
-import { GeistMono } from "geist/font/mono"
+import { IBM_Plex_Sans, IBM_Plex_Mono } from "next/font/google"
 import { Analytics } from "@vercel/analytics/next"
 import { Providers } from "@/components/providers"
 import { Header } from "@/components/header"
@@ -9,34 +8,48 @@ import { Footer } from "@/components/footer"
 import { InstallPrompt } from "@/components/install-prompt"
 import "./globals.css"
 
+const ibmPlexSans = IBM_Plex_Sans({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-ibm-plex-sans",
+  display: "swap",
+})
+
+const ibmPlexMono = IBM_Plex_Mono({
+  subsets: ["latin"],
+  weight: ["400", "500", "600"],
+  variable: "--font-ibm-plex-mono",
+  display: "swap",
+})
+
 export const metadata: Metadata = {
-  title: "Daily Deals SA - South Africa's Hottest Daily Deals",
-  description: "Unbeatable prices on electronics, appliances, and hardware. New deals every 24 hours + 10 FREE items daily!",
+  title: "Shopalot - South Africa's Smart Way to Save",
+  description: "Discover curated savings on electronics, appliances, and hardware with daily blue-tag specials from Shopalot.",
   generator: "v0.app",
   manifest: "/manifest.json",
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
-    title: "Daily Deals SA",
+    title: "Shopalot",
   },
   formatDetection: {
     telephone: false,
   },
   openGraph: {
     type: "website",
-    siteName: "Daily Deals SA",
-    title: "Daily Deals SA - South Africa's Hottest Daily Deals",
-    description: "Unbeatable prices on electronics, appliances, and hardware. New deals every 24 hours + 10 FREE items daily!",
+    siteName: "Shopalot",
+    title: "Shopalot - South Africa's Smart Way to Save",
+    description: "Discover curated savings on electronics, appliances, and hardware with daily blue-tag specials from Shopalot.",
   },
   twitter: {
     card: "summary",
-    title: "Daily Deals SA",
-    description: "South Africa's Hottest Daily Deals",
+    title: "Shopalot",
+    description: "South Africa's blue-tag savings destination",
   },
 }
 
 export const viewport: Viewport = {
-  themeColor: "#000000",
+  themeColor: "#0F62FE",
   width: "device-width",
   initialScale: 1,
   maximumScale: 5,
@@ -61,7 +74,7 @@ export default function RootLayout({
           />
         )}
       </head>
-      <body className={`font-sans ${GeistSans.variable} ${GeistMono.variable}`}>
+      <body className={`font-sans ${ibmPlexSans.variable} ${ibmPlexMono.variable}`}>
         <Providers>
           <div className="flex flex-col min-h-screen">
             <Header />

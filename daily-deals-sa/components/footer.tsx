@@ -10,13 +10,13 @@ export function Footer() {
               <Link href="/">
                 <img 
                   src="/logo.png" 
-                  alt="Daily Deals SA" 
+                  alt="Shopalot" 
                   className="h-12 w-auto"
                 />
               </Link>
             </div>
             <p className="text-sm text-secondary-foreground/80 leading-relaxed">
-              South Africa's premier destination for unbeatable daily deals on electronics, appliances, and more.
+              South Africa's blue-tag destination for curated savings on electronics, appliances, and more.
             </p>
           </div>
 
@@ -100,7 +100,7 @@ export function Footer() {
         </div>
 
         <div className="mt-8 border-t border-secondary-foreground/20 pt-8 text-center text-sm text-secondary-foreground/60">
-          <p>© 2025 Daily Deals SA. All rights reserved. Prices in South African Rand (ZAR).</p>
+          <p>© 2025 Shopalot. All rights reserved. Prices in South African Rand (ZAR).</p>
         </div>
       </div>
     </footer>

@@ -21,7 +21,7 @@ export function Header() {
       <div className="flex items-center justify-between px-6 py-4">
         <div className="flex items-center">
           <h2 className="text-2xl font-semibold text-gray-800">
-            Daily Deals SA - Admin
+            Shopalot - Admin
           </h2>
         </div>
         

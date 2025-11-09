@@ -74,7 +74,7 @@ export function Header() {
         <Link href="/" className="flex items-center gap-2 flex-shrink-0">
           <img 
             src="/logo.png" 
-            alt="Daily Deals SA" 
+            alt="Shopalot" 
             className="h-10 w-auto"
           />
         </Link>

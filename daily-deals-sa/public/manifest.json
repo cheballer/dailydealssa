@@ -1,11 +1,11 @@
 {
-  "name": "Daily Deals SA",
-  "short_name": "Daily Deals",
-  "description": "South Africa's Hottest Daily Deals - Electronics, Appliances, Hardware & More",
+  "name": "Shopalot",
+  "short_name": "Shopalot",
+  "description": "South Africa's blue-tag savings on electronics, appliances, hardware and more",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",
-  "theme_color": "#000000",
+  "theme_color": "#0F62FE",
   "orientation": "portrait-primary",
   "icons": [
     {
@@ -54,4 +54,7 @@
     }
   ]
 }
+
+
+
 

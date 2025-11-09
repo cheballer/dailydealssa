@@ -10,17 +10,17 @@ export function HeroSection() {
       <div className="absolute inset-0 bg-[url('/abstract-geometric-pattern.png')] opacity-10" />
       <div className="container relative mx-auto px-4 py-16 md:py-24">
         <div className="mx-auto max-w-3xl text-center">
-          <div className="mb-6 inline-flex items-center gap-2 rounded-full bg-primary-foreground/20 px-4 py-2 text-sm font-medium text-primary-foreground backdrop-blur-sm">
+          <div className="mb-6 inline-flex items-center gap-2 rounded-full bg-white/20 px-4 py-2 text-sm font-medium text-white backdrop-blur-sm">
             <Clock className="h-4 w-4" />
-            <span>New deals every 24 hours + 10 FREE items daily!</span>
+            <span>Fresh blue-tag specials every 24 hours + 10 FREE drops</span>
           </div>
 
-          <h1 className="mb-6 text-4xl font-bold tracking-tight text-primary-foreground md:text-6xl text-balance">
-            South Africa's Hottest Daily Deals
+          <h1 className="mb-6 text-4xl font-bold tracking-tight text-white md:text-6xl text-balance">
+            Shopalot: South Africa's Smart Way to Save
           </h1>
 
-          <p className="mb-8 text-lg text-primary-foreground/90 md:text-xl text-pretty">
-            Unbeatable prices on electronics, appliances, and hardware. Plus daily free drops! Limited stock. Don't miss out!
+          <p className="mb-8 text-lg text-white/90 md:text-xl text-pretty">
+            Shop curated electronics, appliances, and hardware with vibrant IBM-inspired blues and dependable daily savings.
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
