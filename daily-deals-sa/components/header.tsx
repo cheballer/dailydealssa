@@ -1,6 +1,14 @@
 "use client"
 
-import { ShoppingCart, Menu, Zap, User, Search } from "lucide-react"
+import {
+  ShoppingCart,
+  Menu,
+  Search,
+  ChevronDown,
+  Phone,
+  LifeBuoy,
+  Store,
+} from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
@@ -16,9 +24,10 @@ import { useSession, signOut } from "next-auth/react"
 import Link from "next/link"
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
+import { CATEGORIES } from "@/lib/constants"
 
 export function Header() {
-  const { data: session } = useSession()
+  const { data: session, status } = useSession()
   const router = useRouter()
   // @ts-ignore - session user has role field from our extended session
   const isAdmin = session?.user?.role === "ADMIN"
@@ -70,114 +79,188 @@ export function Header() {
   
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container mx-auto flex h-16 items-center justify-between px-4 gap-4">
-        <Link href="/" className="flex items-center gap-2 flex-shrink-0">
-          <img 
-            src="/logo.png" 
-            alt="DailyDealzSA" 
-            className="h-10 w-auto"
-          />
-        </Link>
+      <div className="border-b bg-muted/40 text-xs">
+        <div className="container mx-auto flex h-9 items-center justify-between px-4">
+          <div className="flex items-center gap-4">
+            <Link href="/contact" className="flex items-center gap-2 text-muted-foreground hover:text-foreground">
+              <Phone className="h-3.5 w-3.5" />
+              Need help? 021 000 0000
+            </Link>
+            <Link href="/faq" className="hidden items-center gap-2 text-muted-foreground hover:text-foreground md:flex">
+              <LifeBuoy className="h-3.5 w-3.5" />
+              Help Centre
+            </Link>
+            <Link href="/sell-with-us" className="hidden items-center gap-2 text-muted-foreground hover:text-foreground md:flex">
+              <Store className="h-3.5 w-3.5" />
+              Sell on DailyDealzSA
+            </Link>
+          </div>
+          <div className="flex items-center gap-3">
+            {session ? (
+              <>
+                <Link href="/orders" className="text-muted-foreground hover:text-foreground">
+                  Orders
+                </Link>
+                <Link href="/profile" className="text-muted-foreground hover:text-foreground">
+                  My Account
+                </Link>
+              </>
+            ) : (
+              <>
+                <Link href="/auth/signin" className="text-muted-foreground hover:text-foreground">
+                  Sign In
+                </Link>
+                <span className="text-muted-foreground">/</span>
+                <Link href="/auth/signup" className="text-muted-foreground hover:text-foreground">
+                  Register
+                </Link>
+              </>
+            )}
+          </div>
+        </div>
+      </div>
 
-        <nav className="hidden lg:flex items-center gap-6 flex-shrink-0">
-          <Link href="/deals/today" className="text-sm font-medium text-foreground hover:text-primary transition-colors">
+      <div className="border-b bg-background">
+        <div className="container mx-auto flex h-16 items-center gap-4 px-4">
+          <Link href="/" className="flex items-center gap-2 flex-shrink-0">
+            <img
+              src="/logo.png"
+              alt="DailyDealzSA"
+              className="h-10 w-auto"
+            />
+          </Link>
+
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="outline"
+                className="hidden items-center gap-2 whitespace-nowrap lg:flex"
+              >
+                Shop by Department
+                <ChevronDown className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="start" className="w-64">
+              <DropdownMenuLabel className="text-xs uppercase text-muted-foreground">
+                Popular categories
+              </DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              {CATEGORIES.slice(0, 10).map((category) => (
+                <DropdownMenuItem key={category.slug} asChild>
+                  <Link href={`/c/${category.slug}`} className="flex items-center gap-2">
+                    <span className="text-lg">{category.icon}</span>
+                    <span>{category.name}</span>
+                  </Link>
+                </DropdownMenuItem>
+              ))}
+              <DropdownMenuSeparator />
+              <DropdownMenuItem asChild>
+                <Link href="/categories">View all categories</Link>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+
+          <form onSubmit={handleSearch} className="flex flex-1 items-center">
+            <div className="relative w-full">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Input
+                type="text"
+                placeholder="Search for products, brands..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="h-11 w-full rounded-md pl-10 pr-4"
+              />
+            </div>
+          </form>
+
+          <div className="flex items-center gap-3">
+            <Button variant="ghost" size="icon" className="relative" asChild>
+              <Link href="/checkout">
+                <ShoppingCart className="h-5 w-5" />
+                {cartCount > 0 && (
+                  <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-xs font-bold text-primary-foreground">
+                    {cartCount}
+                  </span>
+                )}
+              </Link>
+            </Button>
+
+            {session ? (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" className="relative h-9 w-9 rounded-full">
+                    <Avatar className="h-9 w-9">
+                      <AvatarImage src={session.user?.image || ""} alt={session.user?.name || ""} />
+                      <AvatarFallback>
+                        {session.user?.name?.charAt(0) || "U"}
+                      </AvatarFallback>
+                    </Avatar>
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="w-56" align="end" forceMount>
+                  <DropdownMenuLabel className="font-normal">
+                    <div className="flex flex-col space-y-1">
+                      <p className="text-sm font-medium leading-none">
+                        {session.user?.name}
+                      </p>
+                      <p className="text-xs leading-none text-muted-foreground">
+                        {session.user?.email}
+                      </p>
+                    </div>
+                  </DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem asChild>
+                    <Link href="/profile">Profile</Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link href="/orders">Orders</Link>
+                  </DropdownMenuItem>
+                  {isAdmin && (
+                    <DropdownMenuItem asChild>
+                      <Link href="/admin">Admin Panel</Link>
+                    </DropdownMenuItem>
+                  )}
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={() => signOut()}>
+                    Log out
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            ) : status !== "loading" ? (
+              <div className="flex items-center gap-2">
+                <Button variant="ghost" asChild>
+                  <Link href="/auth/signin">Sign In</Link>
+                </Button>
+                <Button asChild>
+                  <Link href="/auth/signup">Sign Up</Link>
+                </Button>
+              </div>
+            ) : null}
+
+            <Button variant="ghost" size="icon" className="lg:hidden">
+              <Menu className="h-5 w-5" />
+            </Button>
+          </div>
+        </div>
+      </div>
+
+      <div className="hidden border-b bg-muted/20 lg:block">
+        <div className="container mx-auto flex items-center gap-6 overflow-x-auto px-4 py-2 text-sm text-muted-foreground">
+          <Link href="/deals/today" className="font-medium text-foreground hover:text-primary">
             Today's Deals
           </Link>
-          <Link href="/c/electronics" className="text-sm font-medium text-foreground hover:text-primary transition-colors">
-            Electronics
-          </Link>
-          <Link href="/c/appliances" className="text-sm font-medium text-foreground hover:text-primary transition-colors">
-            Appliances
-          </Link>
-          <Link href="/c/hardware" className="text-sm font-medium text-foreground hover:text-primary transition-colors">
-            Hardware
-          </Link>
-          <Link href="/categories" className="text-sm font-medium text-foreground hover:text-primary transition-colors">
+          {CATEGORIES.slice(0, 8).map((category) => (
+            <Link
+              key={category.slug}
+              href={`/c/${category.slug}`}
+              className="whitespace-nowrap transition-colors hover:text-primary"
+            >
+              {category.name}
+            </Link>
+          ))}
+          <Link href="/categories" className="whitespace-nowrap transition-colors hover:text-primary">
             Browse Categories
           </Link>
-        </nav>
-
-        {/* Search Bar */}
-        <form onSubmit={handleSearch} className="hidden md:flex flex-1 max-w-md mx-4">
-          <div className="relative w-full">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-            <Input
-              type="text"
-              placeholder="Search products..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10 pr-4 w-full"
-            />
-          </div>
-        </form>
-
-        <div className="flex items-center gap-3 flex-shrink-0">
-          <Button variant="ghost" size="icon" className="relative" asChild>
-            <Link href="/checkout">
-              <ShoppingCart className="h-5 w-5" />
-              {cartCount > 0 && (
-                <span className="absolute -top-1 -right-1 h-5 w-5 rounded-full bg-primary text-primary-foreground text-xs flex items-center justify-center font-bold">
-                  {cartCount}
-                </span>
-              )}
-            </Link>
-          </Button>
-          
-          {session ? (
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="relative h-8 w-8 rounded-full">
-                  <Avatar className="h-8 w-8">
-                    <AvatarImage src={session.user?.image || ""} alt={session.user?.name || ""} />
-                    <AvatarFallback>
-                      {session.user?.name?.charAt(0) || "U"}
-                    </AvatarFallback>
-                  </Avatar>
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-56" align="end" forceMount>
-                <DropdownMenuLabel className="font-normal">
-                  <div className="flex flex-col space-y-1">
-                    <p className="text-sm font-medium leading-none">
-                      {session.user?.name}
-                    </p>
-                    <p className="text-xs leading-none text-muted-foreground">
-                      {session.user?.email}
-                    </p>
-                  </div>
-                </DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem asChild>
-                  <Link href="/profile">Profile</Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Link href="/orders">Orders</Link>
-                </DropdownMenuItem>
-                {isAdmin && (
-                  <DropdownMenuItem asChild>
-                    <Link href="/admin">Admin Panel</Link>
-                  </DropdownMenuItem>
-                )}
-                <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={() => signOut()}>
-                  Log out
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          ) : (
-            <div className="flex items-center gap-2">
-              <Button variant="ghost" asChild>
-                <Link href="/auth/signin">Sign In</Link>
-              </Button>
-              <Button asChild>
-                <Link href="/auth/signup">Sign Up</Link>
-              </Button>
-            </div>
-          )}
-          
-          <Button variant="ghost" size="icon" className="md:hidden">
-            <Menu className="h-5 w-5" />
-          </Button>
         </div>
       </div>
     </header>

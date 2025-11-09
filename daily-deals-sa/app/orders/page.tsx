@@ -152,9 +152,11 @@ export default function OrdersPage() {
                     ))}
                   </div>
                   <div className="mt-4 flex gap-3">
-                    <Button variant="outline" className="flex-1">
-                      <Eye className="mr-2 h-4 w-4" />
-                      View Details
+                    <Button variant="outline" className="flex-1" asChild>
+                      <Link href={`/orders/${order.id}`}>
+                        <Eye className="mr-2 h-4 w-4" />
+                        View Details
+                      </Link>
                     </Button>
                     {order.status === "SHIPPED" && (
                       <Button variant="outline" className="flex-1">
