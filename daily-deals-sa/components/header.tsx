@@ -20,6 +20,13 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
 import { useSession, signOut } from "next-auth/react"
 import Link from "next/link"
 import { useState, useEffect } from "react"
@@ -31,6 +38,7 @@ export function Header() {
   const router = useRouter()
   // @ts-ignore - session user has role field from our extended session
   const isAdmin = session?.user?.role === "ADMIN"
+  const [mobileDepartmentsOpen, setMobileDepartmentsOpen] = useState(false)
   const [cartCount, setCartCount] = useState(0)
   const [searchQuery, setSearchQuery] = useState("")
 
@@ -160,6 +168,43 @@ export function Header() {
             </DropdownMenuContent>
           </DropdownMenu>
 
+          <Dialog open={mobileDepartmentsOpen} onOpenChange={setMobileDepartmentsOpen}>
+            <DialogTrigger asChild>
+              <Button
+                variant="outline"
+                className="flex items-center gap-2 rounded-lg lg:hidden"
+              >
+                <Menu className="h-4 w-4" />
+                Categories
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="max-w-md p-0">
+              <DialogHeader className="border-b p-5">
+                <DialogTitle className="text-lg font-semibold" style={{ fontFamily: "var(--font-display)" }}>
+                  Shop by Department
+                </DialogTitle>
+              </DialogHeader>
+              <div className="max-h-[70vh] overflow-y-auto p-5">
+                <div className="grid gap-3">
+                  {CATEGORIES.map((category) => (
+                    <Button
+                      key={category.slug}
+                      variant="ghost"
+                      className="justify-start text-base text-[#152548]"
+                      onClick={() => {
+                        setMobileDepartmentsOpen(false)
+                        router.push(`/c/${category.slug}`)
+                      }}
+                    >
+                      <span className="mr-3 text-lg">{category.icon}</span>
+                      {category.name}
+                    </Button>
+                  ))}
+                </div>
+              </div>
+            </DialogContent>
+          </Dialog>
+
           <form onSubmit={handleSearch} className="flex flex-1 items-center">
             <div className="relative w-full">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -237,9 +282,7 @@ export function Header() {
               </div>
             ) : null}
 
-            <Button variant="ghost" size="icon" className="lg:hidden">
-              <Menu className="h-5 w-5" />
-            </Button>
+            {/* Mobile menu handled by the categories dialog */}
           </div>
         </div>
       </div>
