@@ -93,13 +93,13 @@ export function ProductCard({ product }: ProductCardProps) {
   };
 
   return (
-    <Card className="group overflow-hidden rounded-3xl border border-border/70 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:border-primary/30">
+    <Card className="group overflow-hidden rounded-2xl border border-border/60 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:border-primary/30 lg:max-w-[280px]">
       <Link href={`/products/${product.id}`}>
-        <div className="relative aspect-square overflow-hidden bg-gradient-to-br from-white via-white to-[#f2f5ff]">
+        <div className="relative aspect-[4/5] overflow-hidden bg-gradient-to-br from-white via-white to-[#f2f5ff]">
           <img
             src={product.image || "/placeholder.svg"}
             alt={product.name}
-            className="h-full w-full object-contain p-6 transition-transform duration-300 group-hover:scale-[1.03]"
+            className="h-full w-full object-contain p-5 transition-transform duration-300 group-hover:scale-[1.03]"
           />
           {isFree ? (
             <Badge className="absolute top-3 right-3 bg-green-600 text-white font-semibold px-3 py-1 shadow-md">
@@ -124,26 +124,26 @@ export function ProductCard({ product }: ProductCardProps) {
         </div>
       </Link>
 
-      <CardContent className="space-y-4 p-5">
+      <CardContent className="space-y-3 p-4">
         <Badge variant="secondary" className="text-[11px] font-medium uppercase tracking-wide">
           {product.category}
         </Badge>
         <h3
-          className="line-clamp-1 text-xl font-semibold tracking-tight text-[#152548]"
+          className="line-clamp-1 text-lg font-semibold tracking-tight text-[#152548]"
           style={{ fontFamily: "var(--font-display)" }}
         >
           {product.name}
         </h3>
-        <p className="text-sm leading-relaxed text-muted-foreground line-clamp-2">
+        <p className="text-xs leading-relaxed text-muted-foreground line-clamp-2">
           {product.description}
         </p>
 
         <div className="flex items-baseline gap-2">
           {isFree ? (
-            <span className="text-3xl font-bold text-green-600">FREE</span>
+            <span className="text-2xl font-bold text-green-600">FREE</span>
           ) : (
             <>
-              <span className="text-2xl font-semibold text-primary">R{displayPrice.toLocaleString()}</span>
+              <span className="text-xl font-semibold text-primary">R{displayPrice.toLocaleString()}</span>
               {product.originalPrice && product.originalPrice > displayPrice && (
                 <span className="text-sm text-muted-foreground line-through">
                   R{product.originalPrice.toLocaleString()}
