@@ -12,10 +12,12 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
     }
 
-    const { items, total, userId, shippingInfo } = await request.json()
+    const { items, userId, shippingInfo, total: clientTotal } = await request.json()
 
     console.log("📦 Creating order with items:", items.length)
-    console.log("💰 Total amount:", total)
+    if (typeof clientTotal === "number") {
+      console.log("💰 Client provided total amount:", clientTotal)
+    }
 
     // Create order in database first
     const orderNumber = `DDZ-${Date.now()}-${Math.random().toString(36).substr(2, 9).toUpperCase()}`
@@ -37,15 +39,22 @@ export async function POST(request: NextRequest) {
     })
     
     // Then create the order with the shipping address ID
+    const subtotal = items.reduce((sum: number, item: any) => sum + (item.product.price * item.quantity), 0)
+    const shippingCost = 99
+    const tax = subtotal * 0.15
+    const computedTotal = subtotal + shippingCost + tax
+
+    console.log("📊 Computed totals -> Subtotal:", subtotal, "Shipping:", shippingCost, "Tax:", tax, "Total:", computedTotal)
+
     const order = await db.order.create({
       data: {
         userId,
         orderNumber,
         status: "PENDING",
-        subtotal: items.reduce((sum: number, item: any) => sum + (item.product.price * item.quantity), 0),
-        shippingCost: 99,
-        tax: items.reduce((sum: number, item: any) => sum + (item.product.price * item.quantity), 0) * 0.15,
-        total,
+        subtotal,
+        shippingCost,
+        tax,
+        total: computedTotal,
         paymentStatus: "PENDING",
         shippingAddressId: shippingAddress.id,
         items: {
@@ -85,9 +94,37 @@ export async function POST(request: NextRequest) {
       };
     })
 
+    const shippingCostCents = Math.round(shippingCost * 100);
+    if (shippingCostCents > 0) {
+      lineItems.push({
+        displayName: "Shipping",
+        quantity: 1,
+        unitPrice: shippingCostCents,
+        totalPrice: shippingCostCents,
+        pricingDetails: {
+          price: shippingCostCents,
+          quantity: 1,
+        }
+      })
+    }
+
+    const taxAmountCents = Math.round(tax * 100);
+    if (taxAmountCents > 0) {
+      lineItems.push({
+        displayName: "VAT (15%)",
+        quantity: 1,
+        unitPrice: taxAmountCents,
+        totalPrice: taxAmountCents,
+        pricingDetails: {
+          price: taxAmountCents,
+          quantity: 1,
+        }
+      })
+    }
+
     const checkoutRequest = yocoService.createCheckoutRequest(
       order.id,
-      total,
+      computedTotal,
       description,
       baseUrl,
       lineItems
